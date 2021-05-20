@@ -89,14 +89,21 @@ export default function ProgressBar(props: Props) {
 					</button>
 				)}
 			</div>
-			<input
-				type="range"
-				min="0"
-				max="100"
-				value={Math.floor(rate)}
-				className="w-full"
+
+			<div
+				className="bg-gray-200 rounded w-full mt-2"
+				role="progressbar"
 				title="progressbar"
-			/>
+			>
+				<div
+					className={`${
+						failed ? "bg-red-600" : "bg-blue-600"
+					} rounded px-2 text-white`}
+					style={{ width: Math.round(rate) + "%" }}
+				>
+					{rate + "%"}
+				</div>
+			</div>
 		</div>
 	);
 }

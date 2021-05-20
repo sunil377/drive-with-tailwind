@@ -70,7 +70,7 @@ export default function handleCreateFile({
 										url: downloadURL,
 										path: currentPath,
 										type,
-										userId: "uid",
+										userId: uid,
 										createdAt:
 											database.getCurrentTimeStamp(),
 									})

@@ -1,31 +1,52 @@
+import produce from "immer";
 import { FormEvent, useState } from "react";
-
-import { useAuth } from "../Contexts/useAuthContext";
 import { useInputChange } from "../hooks/useInputChange";
 import { Auth } from "../lib/firebase";
 import style from "../styles/style";
 
 const ForgotPassword = () => {
-	const [message, setMessage] = useState("");
-	const [error, setError] = useState("");
-	const [loading, setLoading] = useState(false);
+	const [state, setState] = useState({
+		error: "",
+		message: "",
+		loading: false,
+	});
 
-	const currentUser = useAuth();
+	const { error, loading, message } = state;
+
 	const email = useInputChange();
 
 	const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
+		setState(
+			produce((prev) => {
+				prev.loading = true;
+				prev.error = "";
+				prev.message = "";
+			})
+		);
 
-		if (currentUser && email.value.trim() !== "") {
-			setLoading(true);
+		if (email.value.trim() !== "") {
 			Auth.sendPasswordResetEmail(email.value)
 				.then(() =>
-					setMessage("check your email inbox for further instruction")
+					setState(
+						produce((prev) => {
+							prev.loading = false;
+							prev.message =
+								"check your email inbox for further instruction";
+						})
+					)
 				)
-				.catch((err) => setError(err.message))
-				.finally(() => setLoading(false));
+				.catch((err) =>
+					setState(
+						produce((prev) => {
+							prev.loading = false;
+							prev.error = err.message;
+						})
+					)
+				);
 		}
 	};
+
 	return (
 		<div className="container mt-24">
 			<div className={style.card}>

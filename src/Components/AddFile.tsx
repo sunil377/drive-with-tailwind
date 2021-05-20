@@ -10,7 +10,7 @@ export default function AddFile({ currentPath }: Props) {
 	const currentUser = useAuth();
 	const [uploadFiles, setUploadFiles] = useState<uploadFileType[]>([]);
 
-	const handleChange = (event: ChangeEvent<HTMLInputElement>): void => {
+	const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
 		if (
 			event.target.files &&
 			event.target.files.length > 0 &&
