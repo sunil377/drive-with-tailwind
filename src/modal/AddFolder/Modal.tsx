@@ -1,73 +1,88 @@
-import { SetStateAction } from "react";
-import { useState, Dispatch, FormEventHandler } from "react";
+import { useState, Dispatch, SetStateAction } from "react";
+import { Form, Formik, FormikHelpers } from "formik";
+
+import AlertComponent from "../../Components/AlertComponent";
+import InputField from "../../Components/InputField";
+
+import { NAMEFILED } from "../../constant/fields";
+import { NAMESCHEMA } from "../../constant/schema";
+
 import { useAuth } from "../../Contexts/useAuthContext";
 import { createFolder } from "../../helper/AddFolder/createFolder";
 import { currentPathType } from "../../hooks/useFolder";
-import { useInputChange } from "../../hooks/useInputChange";
-import style from "../../styles/style";
 
 export default function Modal({
 	setShowModal,
 	currentFolderId,
 	currentPath,
 }: Props) {
-	const folder = useInputChange();
-
 	const [error, setError] = useState("");
-	const [loading, setLoading] = useState(false);
-
 	const currentUser = useAuth();
 
-	const handleSubmit: FormEventHandler = (e) => {
-		e.preventDefault();
-		setLoading(true);
+	const handleSubmit: handleSubmitType = ({ name }, { setSubmitting }) => {
 		setError("");
 		if (currentUser) {
 			createFolder({
 				currentUser,
 				currentPath,
 				currentFolderId,
-				name: folder.value.toLowerCase(),
+				name: name.toLowerCase(),
 			})
 				.then(() => {
-					setLoading(false);
+					setSubmitting(false);
 					setError("");
 					setShowModal(false);
 				})
 				.catch(({ message }) => {
 					setError(message);
-					setLoading(false);
+					setSubmitting(false);
 				});
 		}
 	};
 
 	return (
-		<div className={style.modal}>
-			<form onSubmit={handleSubmit} className={style.card}>
-				{error && <h1 className={style.alert}>{error}</h1>}
-				<input
-					type="text"
-					aria-label="Enter Folder Name"
-					placeholder="Enter Folder Name"
-					required
-					{...folder}
-					autoFocus={true}
-					className={style.input}
-				/>
-				<button
-					type="submit"
-					disabled={loading}
-					className={style.btn + style.btnPrimary}
-				>
-					Add Folder
-				</button>
-				<button
-					onClick={() => setShowModal(false)}
-					className={style.btn + style.btnSuccess}
-				>
-					Cancel
-				</button>
-			</form>
+		<div className="w-full fixed h-screen top-0 left-0 right-0 flex items-center justify-center bg-gray-600 bg-opacity-40">
+			<div className="container">
+				<div className="card space-y-2 sm:space-y-4">
+					<Formik
+						initialValues={{ name: "" }}
+						validationSchema={NAMESCHEMA}
+						onSubmit={handleSubmit}
+					>
+						{({ isSubmitting, errors }) => (
+							<Form
+								title="add folder"
+								className="space-y-2 sm:space-y-4"
+								autoComplete="off"
+							>
+								<AlertComponent message={error} />
+
+								{NAMEFILED.map((val) => (
+									<InputField
+										{...val}
+										key={val.name}
+										errors={errors}
+									/>
+								))}
+								<button
+									type="submit"
+									disabled={isSubmitting}
+									className="btn btn-primary w-full block"
+								>
+									Submit
+								</button>
+							</Form>
+						)}
+					</Formik>
+
+					<button
+						onClick={() => setShowModal(false)}
+						className="btn btn-success w-full block"
+					>
+						Close
+					</button>
+				</div>
+			</div>
 		</div>
 	);
 }
@@ -77,3 +92,10 @@ interface Props {
 	currentPath: currentPathType;
 	currentFolderId: string | null;
 }
+
+type handleSubmitType = (
+	values: { name: string },
+	formikHalpers: FormikHelpers<{
+		name: string;
+	}>
+) => void | Promise<any>;

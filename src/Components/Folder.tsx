@@ -1,8 +1,8 @@
 import { useLocation } from "react-router";
 import { Link } from "react-router-dom";
-import { folderIcon } from "../asset/svg";
+
 import { folderType } from "../hooks/useFolder";
-import style from "../styles/style";
+import icon from "../asset/svg";
 
 export default function Folder({ folders }: Props): JSX.Element | null {
 	const { state } = useLocation<null | { id: string; name: string }[]>();
@@ -12,7 +12,7 @@ export default function Folder({ folders }: Props): JSX.Element | null {
 	}
 
 	return (
-		<div className="bg-white rounded-md flex flex-wrap p-6 shadow-md border-t">
+		<div className="flex flex-wrap px-2 py-4 sm:p-6 border-t">
 			{folders.map(({ name, id }) => {
 				const to = {
 					pathname: `/folders/${id}`,
@@ -22,10 +22,10 @@ export default function Folder({ folders }: Props): JSX.Element | null {
 					<Link
 						to={to}
 						key={id}
-						className={style.folder}
+						className="btn btn-outline-secondary flex m-1 sm:m-2 space-x-1 items-center"
 						style={{ maxWidth: "200px" }}
 					>
-						{folderIcon}
+						<icon.FolderIcon className="h-5 w-5 flex-shrink-0" />
 						<span className="truncate">{name}</span>
 					</Link>
 				);

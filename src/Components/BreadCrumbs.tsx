@@ -1,5 +1,6 @@
 import { MouseEventHandler } from "react";
 import { Link, useLocation } from "react-router-dom";
+
 import { State } from "../types/types";
 
 export default function BreadCrumbs({ currentFolder }: Props) {
@@ -15,20 +16,28 @@ export default function BreadCrumbs({ currentFolder }: Props) {
 			: " text-blue-400 hover:text-blue-800 ";
 
 	return (
-		<div className="flex">
+		<div className="inline-flex flex-wrap">
 			<Link to="/" onClick={handleClick} className={rootLinkStyle}>
 				Root
 			</Link>
-
 			{state &&
-				state.map((val) => {
+				state.map((val, index) => {
+					if (index < state.length - 3) {
+						return (
+							<span
+								key={val.id}
+								title={val.name}
+								className="mx-1 font-bold"
+							>
+								&#10093;...
+							</span>
+						);
+					}
 					const active = val.id === currentFolder;
 
 					const linkClass = active
-						? "cursor-text"
-						: " text-blue-400 hover:text-blue-800";
-
-					const divClass = active ? "" : " truncate w-32 ";
+						? " cursor-text"
+						: " text-blue-400 hover:text-blue-800 max-w-24 ";
 
 					const to = {
 						pathname: `/folders/${val.id}`,
@@ -39,12 +48,16 @@ export default function BreadCrumbs({ currentFolder }: Props) {
 					};
 
 					return (
-						<div key={val.id} className={divClass}>
-							<span className="mx-2">&#10093;</span>
+						<div key={val.id} className="inline-flex">
+							<span className="mx-1 sm:mx-2 font-bold">
+								&#10093;
+							</span>
 							<Link
 								onClick={(e) => active && e.preventDefault()}
-								className={linkClass}
+								className={"truncate " + linkClass}
+								tabIndex={active ? -1 : 0}
 								to={to}
+								style={{ maxWidth: "200px" }}
 							>
 								{val.name}
 							</Link>

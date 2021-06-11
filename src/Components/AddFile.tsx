@@ -1,10 +1,11 @@
 import { ChangeEvent, useState } from "react";
-import { uploadFileIcon } from "../asset/svg";
+
 import { useAuth } from "../Contexts/useAuthContext";
 import { currentPathType } from "../hooks/useFolder";
 import handleCreateFile from "../helper/handleCreateFile";
 import ProgressBar from "./ProgressBar";
 import { uploadFileType } from "../types/types";
+import icon from "../asset/svg";
 
 export default function AddFile({ currentPath }: Props) {
 	const currentUser = useAuth();
@@ -36,10 +37,13 @@ export default function AddFile({ currentPath }: Props) {
 			/>
 			<label htmlFor="file" className="cursor-pointer mr-2">
 				<span className="sr-only">add Image</span>
-				{uploadFileIcon}
+				<icon.CloudUploadIcon className="h-5 w-5 text-green-500" />
 			</label>
 			{uploadFiles.length > 0 && (
-				<div className="fixed w-full max-w-xs right-0 bottom-0 bg-white shadow-md rounded-md p-5 flex-col space-y-2">
+				<div
+					className="fixed w-full max-w-xs right-0 bottom-0 bg-white
+				dark:bg-gray-800 shadow-md rounded-md p-5 space-y-2"
+				>
 					{uploadFiles.map((e) => (
 						<ProgressBar
 							file={e}
@@ -56,3 +60,9 @@ export default function AddFile({ currentPath }: Props) {
 interface Props {
 	currentPath: currentPathType;
 }
+
+// [
+// 	{ failed: true, id: "sunil", name: "sunil", paused: false, rate: 50 },
+// 	{ failed: false, id: "sunil", name: "sunil", paused: true, rate: 10 },
+// 	{ failed: false, id: "sunil", name: "sunil", paused: false, rate: 70 },
+// ]

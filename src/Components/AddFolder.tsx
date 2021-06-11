@@ -1,27 +1,27 @@
 import { useState } from "react";
-import { createPortal } from "react-dom";
-import { addFolderIcon } from "../asset/svg";
+import { Dialog } from "@headlessui/react";
+
 import Modal from "../modal/AddFolder/Modal";
+import icon from "../asset/svg";
 
 export default function AddFolder({ currentFolderId, currentPath }: Props) {
-	const [showModal, setShowModal] = useState(false);
+	const [isOpen, setIsOpen] = useState(false);
 
 	return (
 		<>
-			<button onClick={() => setShowModal(true)}>
-				<span className="sr-only">open Modal for Adding Folder</span>
-				{addFolderIcon}
+			<button onClick={() => setIsOpen(true)}>
+				<span className="sr-only">Add Folder</span>
+				<icon.FolderAddIcon className="h-5 w-5 text-green-500" />
 			</button>
 
-			{showModal &&
-				createPortal(
-					<Modal
-						setShowModal={setShowModal}
-						currentFolderId={currentFolderId}
-						currentPath={currentPath}
-					/>,
-					document.body
-				)}
+			<Dialog open={isOpen} onClose={() => setIsOpen(false)}>
+				<Dialog.Overlay />
+				<Modal
+					setShowModal={setIsOpen}
+					currentFolderId={currentFolderId}
+					currentPath={currentPath}
+				/>
+			</Dialog>
 		</>
 	);
 }

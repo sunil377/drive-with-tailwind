@@ -17,7 +17,6 @@ import Login from "./pages/Login";
 const Dashboard = lazy(() => import("./pages/Dashboard"));
 
 export default function App() {
-	console.log(Dashboard);
 	return (
 		<AuthProvider>
 			<ErrorBoundary>

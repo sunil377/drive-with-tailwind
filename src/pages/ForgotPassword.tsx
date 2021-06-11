@@ -1,8 +1,9 @@
-import produce from "immer";
 import { FormEvent, useState } from "react";
-import { useInputChange } from "../hooks/useInputChange";
+import produce from "immer";
+
 import { Auth } from "../lib/firebase";
-import style from "../styles/style";
+import AlertComponent from "../Components/AlertComponent";
+import { useInputChange } from "../hooks/useInputChange";
 
 const ForgotPassword = () => {
 	const [state, setState] = useState({
@@ -32,44 +33,49 @@ const ForgotPassword = () => {
 						produce((prev) => {
 							prev.loading = false;
 							prev.message =
-								"check your email inbox for further instruction";
+								"Check Your Email INBOX For Further Instruction";
 						})
 					)
 				)
-				.catch((err) =>
+				.catch(({ code, message }) => {
+					let val = message;
+					if (code === "auth/user-not-found") {
+						val = "User Don't Exists";
+					}
 					setState(
 						produce((prev) => {
 							prev.loading = false;
-							prev.error = err.message;
+							prev.error = val;
 						})
-					)
-				);
+					);
+				});
 		}
 	};
 
 	return (
 		<div className="container mt-24">
-			<div className={style.card}>
-				{error && <h1 className={style.alert}>{error}</h1>}
-				{message && <h1 className={style.alertSuccess}>{message}</h1>}
+			<div className="card">
+				<AlertComponent message={error} />
+				<AlertComponent message={message} variant="bg-green-500" />
 				<form
 					onSubmit={handleSubmit}
-					className="flex flex-col space-y-4 w-full"
+					className="space-y-4"
+					title="Reset Password"
 				>
 					<input
 						type="email"
-						aria-label="Enter Email"
 						placeholder="Enter Email"
 						required
 						autoFocus={true}
 						{...email}
-						className={style.input}
+						className="input"
 					/>
 
 					<button
 						disabled={loading}
 						type="submit"
-						className={style.btn + style.btnSuccess}
+						className="btn btn-primary block w-full"
+						aria-disabled={loading}
 					>
 						Reset Password
 					</button>

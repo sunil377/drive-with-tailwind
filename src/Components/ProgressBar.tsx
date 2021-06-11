@@ -1,5 +1,6 @@
 import { Dispatch, SetStateAction } from "react";
 import { uploadFileType } from "../types/types";
+import icon from "../asset/svg";
 
 export default function ProgressBar(props: Props) {
 	const { file, setUploadFiles } = props;
@@ -21,10 +22,15 @@ export default function ProgressBar(props: Props) {
 		);
 
 	return (
-		<div key={id} className="border-b-2">
-			<div className="flex space-y-1 ">
+		<div key={id} className="border-b-2 dark:border-transparent">
+			<div className="flex space-y-1">
 				<span className="truncate flex-grow">{name}</span>
-				{!failed && (
+
+				{failed ? (
+					<button className="text-red-600" onClick={handleClose}>
+						<icon.ExclamationCircleIcon className="h-5 w-5 text-red-500" />
+					</button>
+				) : (
 					<button
 						onClick={() =>
 							paused
@@ -34,71 +40,22 @@ export default function ProgressBar(props: Props) {
 						className="text-blue-600"
 					>
 						{paused ? (
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								className="h-6 w-6"
-								fill="none"
-								viewBox="0 0 24 24"
-								stroke="currentColor"
-							>
-								<path
-									strokeLinecap="round"
-									strokeLinejoin="round"
-									strokeWidth="2"
-									d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"
-								/>
-								<path
-									strokeLinecap="round"
-									strokeLinejoin="round"
-									strokeWidth="2"
-									d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-								/>
-							</svg>
+							<icon.PlayIcon className="h-5 w-5 text-indigo-500" />
 						) : (
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								className="h-6 w-6"
-								fill="none"
-								viewBox="0 0 24 24"
-								stroke="currentColor"
-							>
-								<path
-									strokeLinecap="round"
-									strokeLinejoin="round"
-									strokeWidth="2"
-									d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z"
-								/>
-							</svg>
+							<icon.PauseIcon className="h-5 w-5 text-red-500" />
 						)}
 					</button>
 				)}
-				{failed && (
-					<button className="text-red-600" onClick={handleClose}>
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							className="h-6 w-6"
-							viewBox="0 0 20 20"
-							fill="currentColor"
-						>
-							<path
-								fillRule="evenodd"
-								d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
-								clipRule="evenodd"
-							/>
-						</svg>
-					</button>
-				)}
 			</div>
-
 			<div
-				className="bg-gray-200 rounded w-full mt-2"
+				className="bg-gray-200 dark:bg-white rounded w-full mt-2"
 				role="progressbar"
 				title="progressbar"
 			>
 				<div
 					className={`${
 						failed ? "bg-red-600" : "bg-blue-600"
-					} rounded px-2 text-white`}
+					} rounded px-2 text-white dark:text-black`}
 					style={{ width: Math.round(rate) + "%" }}
 				>
 					{rate + "%"}
