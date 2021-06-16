@@ -1,6 +1,6 @@
 import { useHistory } from "react-router-dom";
 import { Form, Formik, FormikErrors } from "formik";
-import { FC, useMemo } from "react";
+import { FC, useEffect, useMemo, useRef } from "react";
 
 import { useSetAuth } from "../Contexts/useAuthContext";
 import { signupValidation } from "../validation/signupValidation";
@@ -13,8 +13,6 @@ import Container from "../ui/Container";
 import Anchor from "../ui/Anchor";
 import Center from "../ui/Center";
 import { onSubmitType } from "../types/types";
-import { useRef } from "react";
-import { useEffect } from "react";
 
 export default function Signup() {
 	const history = useHistory();
@@ -91,17 +89,15 @@ const SignupForm: FC<{
 	const isSubmit = useRef(false);
 	const signupRef = useRef<HTMLFormElement>(null);
 
-	const signupCurrent = signupRef.current;
-	const isSubmitCurrent = isSubmit.current;
-
-	const tabList = useMemo(() => {
-		return signupCurrent && signupCurrent.querySelectorAll("input");
-	}, [signupCurrent]);
+	const isSubmitRefCurrent = isSubmit.current;
 
 	useEffect(() => {
-		if (isSubmitCurrent && tabList) {
+		if (isSubmitRefCurrent) {
 			const keys = Object.keys(errors);
-			if (keys.length > 0) {
+			const tabList =
+				signupRef.current &&
+				signupRef.current.querySelectorAll("input");
+			if (keys.length > 0 && tabList) {
 				tabList.forEach((ele) => {
 					if (ele.name === keys[0]) {
 						ele.focus();
@@ -110,7 +106,7 @@ const SignupForm: FC<{
 				isSubmit.current = false;
 			}
 		}
-	}, [isSubmitCurrent, tabList, errors]);
+	}, [errors, isSubmitRefCurrent]);
 
 	useEffect(() => {
 		if (isSubmitting) {

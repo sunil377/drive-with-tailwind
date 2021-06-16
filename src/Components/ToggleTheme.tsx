@@ -1,11 +1,27 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import SunIcon from "@heroicons/react/solid/SunIcon";
 import MoonIcon from "@heroicons/react/solid/MoonIcon";
+import { useCallback } from "react";
 
 const ToggleTheme = () => {
 	const [enabled, setEnabled] = useState(false);
+	const toggleRef = useRef<HTMLSpanElement>(null);
 
-	const ht = document.getElementsByTagName("html")[0];
+	const ht = document.querySelector("html")!;
+
+	const keydown = useCallback((e: KeyboardEvent) => {
+		if (e.code === "Space") {
+			if (document.activeElement === toggleRef.current) {
+				setEnabled((prev) => !prev);
+				e.preventDefault();
+			}
+		}
+	}, []);
+
+	useEffect(() => {
+		window.addEventListener("keydown", keydown);
+		return () => window.removeEventListener("keydown", keydown);
+	}, [keydown]);
 
 	useEffect(() => {
 		if (enabled) {
@@ -16,9 +32,9 @@ const ToggleTheme = () => {
 	}, [enabled, ht]);
 
 	return (
-		<div className="inline-flex sm:space-x-2">
+		<div className="inline-flex sm:space-x-2 align-middle items-center">
 			<SunIcon
-				className={`h-6 w-6 ${
+				className={`h-4 w-4 sm:h-6 sm:w-6 ${
 					enabled ? "text-gray-400" : "text-pink-400"
 				}`}
 			/>
@@ -28,6 +44,7 @@ const ToggleTheme = () => {
 				aria-checked={enabled}
 				role="checkbox"
 				onClick={() => setEnabled((prev) => !prev)}
+				ref={toggleRef}
 			>
 				<span className="sr-only">Use Dark Theme</span>
 				<span
@@ -38,7 +55,7 @@ const ToggleTheme = () => {
 			</span>
 
 			<MoonIcon
-				className={`h-6 w-6 ${
+				className={`h-4 w-4 sm:h-6 sm:w-6 ${
 					enabled ? "text-black" : "text-gray-400"
 				}`}
 			/>

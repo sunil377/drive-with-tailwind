@@ -81,22 +81,13 @@ const LoginForm: FC<{
 	const loginRef = useRef<HTMLFormElement>(null);
 	const isSubmit = useRef(false);
 
-	const loginRefCurrent = loginRef.current;
 	const isSubmitRefCurrent = isSubmit.current;
 
-	const tabList = useMemo(() => {
-		const res =
-			loginRefCurrent && loginRefCurrent.querySelectorAll("input");
-		if (res) {
-			return res;
-		}
-		return null;
-	}, [loginRefCurrent]);
-
 	useEffect(() => {
-		if (isSubmitRefCurrent && tabList) {
+		if (isSubmitRefCurrent) {
 			const keys = Object.keys(errors);
-			if (keys.length > 0) {
+			const tabList = loginRef.current?.querySelectorAll("input");
+			if (keys.length > 0 && tabList) {
 				tabList.forEach((ele) => {
 					if (ele.name === keys[0]) {
 						ele.focus();
@@ -105,7 +96,7 @@ const LoginForm: FC<{
 				isSubmit.current = false;
 			}
 		}
-	}, [isSubmitRefCurrent, errors, tabList]);
+	}, [isSubmitRefCurrent, errors]);
 
 	useEffect(() => {
 		if (isSubmitting) {

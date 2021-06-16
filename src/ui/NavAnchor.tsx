@@ -6,7 +6,7 @@ const NavAnchor: Props = ({ to, title }) => {
 	return (
 		<NavLink
 			to={to}
-			className={`p-1 sm:px-2 inline-block hover:text-indigo-500 dark:text-white hover:underline outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-400 rounded-md border border-transparent ${
+			className={`sm:p-2 inline-block hover:text-indigo-500 dark:text-white hover:underline focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-400 rounded-md  ${
 				to === "/" && "font-bold"
 			} ${pathname === to && "font-light"}`}
 		>

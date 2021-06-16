@@ -25,7 +25,9 @@ export default function Folder({ folders }: Props): JSX.Element | null {
 						className="flex m-1 sm:m-2 space-x-1 items-center border border-black  dark:border-white dark:text-white rounded-md p-1 dark:bg-gray-800 hover:bg-black dark:hover:bg-white dark:hover:text-black hover:text-white transition duration-200 ease-in-out transform sc"
 					>
 						<FolderIcon className="h-5 w-5 flex-shrink-0" />
-						<span className="truncate w-20 text-sm">{name}</span>
+						<span className="truncate w-16 sm:w-20 text-sm">
+							{name}
+						</span>
 					</Link>
 				);
 			})}

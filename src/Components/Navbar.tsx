@@ -2,6 +2,7 @@ import { useHistory } from "react-router-dom";
 
 import { useAuth } from "../Contexts/useAuthContext";
 import { Auth } from "../lib/firebase";
+import Button from "../ui/Button";
 import Container from "../ui/Container";
 import NavAnchor from "../ui/NavAnchor";
 import ToggleTheme from "./ToggleTheme";
@@ -23,17 +24,17 @@ export default function Navbar() {
 			<Container>
 				<div className="flex justify-between py-4 px-1 sm:px-2 w-full">
 					<NavAnchor to="/" title="Google Drive Clone" />
-					<div className="inline-flex sm:space-x-4 flex-1 justify-end items-center">
+					<div className="inline-flex space-x-2 sm:space-x-4 flex-1 justify-end items-center">
 						<ToggleTheme />
+
 						{currentUser ? (
 							<>
 								<NavAnchor to="/profile" title="Profile" />
-								<button
+								<Button
 									onClick={handleClick}
-									className="btn btn-outline-primary"
-								>
-									Logout
-								</button>
+									title="Logout"
+									className="ml-1"
+								/>
 							</>
 						) : (
 							<>

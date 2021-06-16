@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useMemo } from "react";
-import { Form, Formik } from "formik";
+import { Form, Formik, FormikErrors } from "formik";
 
 import { useAuth } from "../Contexts/useAuthContext";
 import { createFolder } from "../helper/AddFolder/createFolder";
@@ -10,6 +10,7 @@ import Container from "../ui/Container";
 import Card from "../ui/Card";
 import Input from "../ui/Input";
 import { onSubmitType, validateType } from "../types/types";
+import { FC } from "react";
 
 const keyList: Record<string, Boolean> = {};
 
@@ -119,7 +120,7 @@ export default function Modal({
 
 	return (
 		<div
-			className={`  w-full fixed h-screen inset-0 flex items-center justify-center bg-gray-800 dark:bg-white  bg-opacity-40 dark:bg-opacity-30 z-10 `}
+			className={`  w-full fixed h-screen inset-0 flex items-center justify-center bg-gray-800 dark:bg-white bg-opacity-40 dark:bg-opacity-30 z-10 `}
 			role="dialog"
 			aria-modal="true"
 			ref={modalRef}
@@ -131,34 +132,8 @@ export default function Modal({
 						validate={validate}
 						onSubmit={handleSubmit}
 					>
-						{({ isSubmitting, errors }) => (
-							<Form
-								title="Add Folder"
-								className="space-y-3 sm:space-y-4"
-								autoComplete="off"
-							>
-								<Input
-									name="name"
-									placeholder="Enter Name"
-									type="text"
-									required={true}
-									errors={errors}
-									as="field"
-									autoFocus={true}
-								/>
-								<div className="flex space-x-2 sm:space-x-4 justify-end ">
-									<Button
-										type="submit"
-										title="Submit"
-										disabled={isSubmitting}
-									/>
-									<Button
-										title="Cancel"
-										variant="danger"
-										onClick={handleClose}
-									/>
-								</div>
-							</Form>
+						{(props) => (
+							<ModalForm {...props} handleClose={handleClose} />
 						)}
 					</Formik>
 				</Card>
@@ -175,3 +150,53 @@ interface Props {
 }
 
 type TabList = NodeListOf<HTMLButtonElement | HTMLInputElement>;
+
+const ModalForm: FC<{
+	errors: FormikErrors<{ name: string }>;
+	isSubmitting: boolean;
+	handleClose: () => void;
+}> = ({ errors, isSubmitting, handleClose }) => {
+	const modalRef = useRef<HTMLFormElement>(null);
+	const isSubmitRef = useRef(false);
+
+	const isSubmitRefCurrent = isSubmitRef.current;
+
+	useEffect(() => {
+		if (isSubmitRefCurrent) {
+			if (errors["name"]) {
+				modalRef.current?.querySelector("input")?.focus();
+				isSubmitRef.current = false;
+			}
+		}
+	}, [isSubmitRefCurrent, errors]);
+
+	useEffect(() => {
+		if (isSubmitting) {
+			isSubmitRef.current = true;
+		}
+	}, [isSubmitting]);
+
+	return (
+		<Form
+			title="Add Folder"
+			className="space-y-3 sm:space-y-4"
+			autoComplete="off"
+			noValidate
+			ref={modalRef}
+		>
+			<Input
+				name="name"
+				placeholder="Enter Name"
+				type="text"
+				required={true}
+				errors={errors}
+				as="field"
+				autoFocus={true}
+			/>
+			<div className="flex space-x-2 sm:space-x-4 justify-end ">
+				<Button type="submit" title="Submit" disabled={isSubmitting} />
+				<Button title="Cancel" variant="danger" onClick={handleClose} />
+			</div>
+		</Form>
+	);
+};
