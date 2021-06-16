@@ -4,7 +4,7 @@ import FolderAddIcon from "@heroicons/react/solid/FolderAddIcon";
 import Modal from "./Modal";
 
 export default function AddFolder({ currentFolderId, currentPath }: Props) {
-	const [isOpen, setIsOpen] = useState(true);
+	const [isOpen, setIsOpen] = useState(false);
 
 	const btnRef = useRef<HTMLButtonElement>(null);
 

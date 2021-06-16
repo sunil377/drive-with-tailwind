@@ -1,6 +1,6 @@
-import { FormikErrors } from "formik";
+import { validateType } from "../types/types";
 
-export const signupValidation: validateType = ({
+export const signupValidation: validateType<InitialState> = ({
 	email,
 	password,
 	confirmPassword,
@@ -43,7 +43,3 @@ interface InitialState {
 	password: string;
 	confirmPassword: string;
 }
-
-type validateType = (
-	values: InitialState
-) => void | object | Promise<FormikErrors<InitialState>>;

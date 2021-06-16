@@ -1,8 +1,11 @@
-import { FormikErrors } from "formik";
+import { validateType } from "../types/types";
 
 const EMAIL_PATTERN = /[a-z0-9._%+-]+@[a-z0-9]+\.[a-z]{2,4}$/i;
 
-export const loginValidation: validateType = ({ email, password }) => {
+export const loginValidation: validateType<InitialState> = ({
+	email,
+	password,
+}) => {
 	const err: {
 		email?: string;
 		password?: string;
@@ -24,7 +27,3 @@ type InitialState = {
 	email: string;
 	password: string;
 };
-
-type validateType = (
-	values: InitialState
-) => void | object | Promise<FormikErrors<InitialState>>;

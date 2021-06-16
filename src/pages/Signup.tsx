@@ -1,27 +1,33 @@
 import { useHistory } from "react-router-dom";
-import { Form, Formik, FormikHelpers } from "formik";
+import { Form, Formik } from "formik";
+import { useMemo } from "react";
 
 import { useSetAuth } from "../Contexts/useAuthContext";
 import { signupValidation } from "../validation/signupValidation";
 import { Auth } from "../lib/firebase";
+
 import Button from "../ui/Button";
 import Input from "../ui/Input";
 import Card from "../ui/Card";
 import Container from "../ui/Container";
 import Anchor from "../ui/Anchor";
 import Center from "../ui/Center";
-
-const initialState = {
-	email: "",
-	password: "",
-	confirmPassword: "",
-};
+import { onSubmitType } from "../types/types";
 
 export default function Signup() {
 	const history = useHistory();
 	const setCurrentUser = useSetAuth();
 
-	const handleSubmit: handleSubmitType = (
+	const initialState = useMemo(
+		() => ({
+			email: "",
+			password: "",
+			confirmPassword: "",
+		}),
+		[]
+	);
+
+	const handleSubmit: onSubmitType<typeof initialState> = (
 		{ email, password, confirmPassword },
 		{ setSubmitting, setErrors }
 	) => {
@@ -109,10 +115,3 @@ export default function Signup() {
 		</Container>
 	);
 }
-
-type InitialState = typeof initialState;
-
-type handleSubmitType = (
-	values: InitialState,
-	formikHalper: FormikHelpers<InitialState>
-) => void | Promise<any>;

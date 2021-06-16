@@ -1,85 +1,81 @@
-import { FormEvent, useState } from "react";
-import produce from "immer";
+import { useState, useMemo } from "react";
+import { Form, Formik } from "formik";
 
 import { Auth } from "../lib/firebase";
-import AlertComponent from "../Components/AlertComponent";
-import { useInputChange } from "../hooks/useInputChange";
+
 import Button from "../ui/Button";
+import Container from "../ui/Container";
+import Card from "../ui/Card";
+import Input from "../ui/Input";
+import Alert from "../Components/Alert";
+import { onSubmitType, validateType } from "../types/types";
 
 const ForgotPassword = () => {
-	const [state, setState] = useState({
-		error: "",
-		message: "",
-		loading: false,
-	});
+	const [msg, setMsg] = useState("");
 
-	const { error, loading, message } = state;
+	const initialState = useMemo(() => ({ email: "" }), []);
 
-	const email = useInputChange();
-
-	const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-		e.preventDefault();
-		setState(
-			produce((prev) => {
-				prev.loading = true;
-				prev.error = "";
-				prev.message = "";
-			})
-		);
-
-		if (email.value.trim() !== "") {
-			Auth.sendPasswordResetEmail(email.value)
-				.then(() =>
-					setState(
-						produce((prev) => {
-							prev.loading = false;
-							prev.message =
-								"Check Your Email INBOX For Further Instruction";
-						})
-					)
-				)
-				.catch(({ code, message }) => {
-					let val = message;
-					if (code === "auth/user-not-found") {
-						val = "User Don't Exists";
-					}
-					setState(
-						produce((prev) => {
-							prev.loading = false;
-							prev.error = val;
-						})
-					);
-				});
+	const validate: validateType<typeof initialState> = ({ email }) => {
+		const err: { email?: string } = {};
+		switch (true) {
+			case email.trim() === "":
+				err.email = "Required";
+				break;
 		}
+		return err;
+	};
+
+	const handleSubmit: onSubmitType<typeof initialState> = (
+		{ email },
+		{ setErrors, setSubmitting }
+	) => {
+		setMsg("");
+		Auth.sendPasswordResetEmail(email)
+			.then(() => {
+				setMsg("Check Your Email INBOX For Further Instruction");
+				setSubmitting(false);
+			})
+			.catch(({ code, message }) => {
+				let val = message;
+				if (code === "auth/user-not-found") {
+					val = "User Don't Exists";
+				}
+				setErrors({ email: val });
+				setSubmitting(false);
+			});
 	};
 
 	return (
-		<div className="container mt-24">
-			<div className="card">
-				<AlertComponent message={error} />
-				<AlertComponent message={message} variant="bg-green-500" />
-				<form
-					onSubmit={handleSubmit}
-					className="space-y-4"
-					title="Reset Password"
-				>
-					<input
-						type="email"
-						placeholder="Enter Email"
-						required
-						autoFocus={true}
-						{...email}
-						className="input"
-					/>
-					<Button
-						title="Reset Password"
-						disabled={loading}
-						type="submit"
-						className="block w-full"
-					/>
-				</form>
-			</div>
-		</div>
+		<Container className="mt-24">
+			<Formik
+				initialValues={initialState}
+				onSubmit={handleSubmit}
+				validate={validate}
+			>
+				{({ isSubmitting, errors }) => (
+					<Form title="Reset Password" autoComplete="off">
+						<Card className="space-y-2">
+							{msg && <Alert message={msg} variant="success" />}
+							<Input
+								type="email"
+								placeholder="Enter Email"
+								autoFocus={true}
+								name="email"
+								as="field"
+								required
+								errors={errors}
+							/>
+							<Button
+								title="Reset Password"
+								disabled={isSubmitting}
+								type="submit"
+								className="block w-full"
+							/>
+						</Card>
+					</Form>
+				)}
+			</Formik>
+		</Container>
 	);
 };
 

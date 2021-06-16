@@ -1,16 +1,12 @@
-import { useEffect, useState } from "react";
-
-import AlertComponent from "../Components/AlertComponent";
+import { useState } from "react";
+import Alert from "../Components/Alert";
 import { useAuth } from "../Contexts/useAuthContext";
+
 import Button from "../ui/Button";
 import Card from "../ui/Card";
 import Container from "../ui/Container";
 
 export default function Profile() {
-	useEffect(() => {
-		document.title = "Profile - Google Drive";
-	}, []);
-
 	const [state, setState] = useState({
 		error: "",
 		message: "",
@@ -47,6 +43,8 @@ export default function Profile() {
 	return (
 		<Container className="container mt-24 ">
 			<Card className="card space-y-2 md:space-y-4 ">
+				{message && <Alert message={message} variant="success" />}
+				{error && <Alert message={error} variant="alert" />}
 				<h1 className="text-lg">
 					<strong>Profile</strong>
 				</h1>
@@ -66,9 +64,6 @@ export default function Profile() {
 						onClick={handleVerifyEmail}
 					/>
 				)}
-
-				<AlertComponent message={error} />
-				<AlertComponent message={message} variant="bg-green-500" />
 			</Card>
 		</Container>
 	);

@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useRef } from "react";
-import { Form, Formik, FormikErrors, FormikHelpers } from "formik";
+import { useCallback, useEffect, useRef, useMemo } from "react";
+import { Form, Formik } from "formik";
 
 import { useAuth } from "../Contexts/useAuthContext";
 import { createFolder } from "../helper/AddFolder/createFolder";
@@ -9,6 +9,7 @@ import Button from "../ui/Button";
 import Container from "../ui/Container";
 import Card from "../ui/Card";
 import Input from "../ui/Input";
+import { onSubmitType, validateType } from "../types/types";
 
 const keyList: Record<string, Boolean> = {};
 
@@ -18,7 +19,6 @@ export default function Modal({
 	handleClose,
 }: Props) {
 	const currentUser = useAuth();
-
 	const modalRef = useRef<HTMLDivElement>(null);
 
 	const keyup = useCallback((e: KeyboardEvent) => {
@@ -26,6 +26,8 @@ export default function Modal({
 			keyList[e.key] = false;
 		}
 	}, []);
+
+	const initialState = useMemo(() => ({ name: "" }), []);
 
 	const keydown = useCallback(
 		(e: KeyboardEvent) => {
@@ -59,7 +61,6 @@ export default function Modal({
 							}
 						}
 					}
-
 					break;
 			}
 		},
@@ -75,23 +76,25 @@ export default function Modal({
 		};
 	}, [keydown, keyup]);
 
-	const validate: validateType = ({ name }) => {
+	const validate: validateType<typeof initialState> = ({ name }) => {
 		const err: {
 			name?: string;
 		} = {};
 
-		if (name.trim() === "") {
-			err.name = "Required";
-		} else if (name.match(/[><()]/)) {
-			err.name = "Invalid, Remove Special Characters";
-		} else if (name.trim().length < 3) {
-			err.name = "Name Should Be 3 Character Long";
+		switch (true) {
+			case name.trim() === "":
+				err.name = "Required";
+				break;
+
+			case name.trim().length < 3:
+				err.name = "Name Should Be 3 Character Long";
+				break;
 		}
 
 		return err;
 	};
 
-	const handleSubmit: handleSubmitType = (
+	const handleSubmit: onSubmitType<typeof initialState> = (
 		{ name },
 		{ setSubmitting, setErrors }
 	) => {
@@ -124,7 +127,7 @@ export default function Modal({
 			<Container>
 				<Card className={`space-y-2 sm:space-y-4 animate-popup`}>
 					<Formik
-						initialValues={{ name: "" }}
+						initialValues={initialState}
 						validate={validate}
 						onSubmit={handleSubmit}
 					>
@@ -171,16 +174,5 @@ interface Props {
 	currentFolderId: string | null;
 	show: boolean;
 }
-
-type handleSubmitType = (
-	values: { name: string },
-	formikHalpers: FormikHelpers<{
-		name: string;
-	}>
-) => void | Promise<any>;
-
-type validateType = (values: {
-	name: string;
-}) => void | object | Promise<FormikErrors<{ name: string }>>;
 
 type TabList = NodeListOf<HTMLButtonElement | HTMLInputElement>;

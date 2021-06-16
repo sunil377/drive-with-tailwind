@@ -1,9 +1,11 @@
 import { useHistory } from "react-router-dom";
+import { useMemo } from "react";
+import { Formik, Form } from "formik";
 
 import { useSetAuth } from "../Contexts/useAuthContext";
 import { Auth } from "../lib/firebase";
-import { Formik, Form, FormikHelpers } from "formik";
 import { loginValidation } from "../validation/loginValidation";
+import { onSubmitType } from "../types/types";
 
 import Input from "../ui/Input";
 import Button from "../ui/Button";
@@ -12,16 +14,19 @@ import Container from "../ui/Container";
 import Anchor from "../ui/Anchor";
 import Center from "../ui/Center";
 
-const initialState = {
-	email: "",
-	password: "",
-};
-
 export default function Login() {
 	const setCurrentUser = useSetAuth();
 	const history = useHistory();
 
-	const handleSubmit: onSubmitType = async (
+	const initialState = useMemo(
+		() => ({
+			email: "",
+			password: "",
+		}),
+		[]
+	);
+
+	const handleSubmit: onSubmitType<typeof initialState> = async (
 		{ email, password },
 		{ setSubmitting, setErrors }
 	) => {
@@ -97,8 +102,3 @@ export default function Login() {
 		</Container>
 	);
 }
-
-type onSubmitType = (
-	values: typeof initialState,
-	formikHelpers: FormikHelpers<typeof initialState>
-) => void | Promise<any>;
