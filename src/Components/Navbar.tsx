@@ -1,7 +1,9 @@
-import { NavLink, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 import { useAuth } from "../Contexts/useAuthContext";
 import { Auth } from "../lib/firebase";
+import Container from "../ui/Container";
+import NavAnchor from "../ui/NavAnchor";
 import ToggleTheme from "./ToggleTheme";
 
 export default function Navbar() {
@@ -18,20 +20,14 @@ export default function Navbar() {
 
 	return (
 		<div className="bg-gray-50 shadow-md dark:bg-gray-800 dark:text-white">
-			<div className="container mx-auto">
-				<div className="flex justify-between py-2 px-1 sm:px-2 w-full">
-					<NavLink to="/" className="navLink">
-						<strong>Google Drive Clone</strong>
-					</NavLink>
-
+			<Container>
+				<div className="flex justify-between py-4 px-1 sm:px-2 w-full">
+					<NavAnchor to="/" title="Google Drive Clone" />
 					<div className="inline-flex sm:space-x-4 flex-1 justify-end items-center">
 						<ToggleTheme />
 						{currentUser ? (
 							<>
-								<NavLink to="/profile" className="navLink">
-									Profile
-								</NavLink>
-
+								<NavAnchor to="/profile" title="Profile" />
 								<button
 									onClick={handleClick}
 									className="btn btn-outline-primary"
@@ -41,17 +37,13 @@ export default function Navbar() {
 							</>
 						) : (
 							<>
-								<NavLink to="/signup" className="navLink">
-									Sign Up
-								</NavLink>
-								<NavLink to="/login" className="navLink">
-									Log In
-								</NavLink>
+								<NavAnchor to="/signup" title="Sign Up" />
+								<NavAnchor to="/login" title="Log In" />
 							</>
 						)}
 					</div>
 				</div>
-			</div>
+			</Container>
 		</div>
 	);
 }

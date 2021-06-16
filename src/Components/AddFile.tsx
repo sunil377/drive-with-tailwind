@@ -5,7 +5,7 @@ import { currentPathType } from "../hooks/useFolder";
 import handleCreateFile from "../helper/handleCreateFile";
 import ProgressBar from "./ProgressBar";
 import { uploadFileType } from "../types/types";
-import icon from "../asset/svg";
+import CloudUploadIcon from "@heroicons/react/solid/CloudUploadIcon";
 
 export default function AddFile({ currentPath }: Props) {
 	const currentUser = useAuth();
@@ -37,7 +37,7 @@ export default function AddFile({ currentPath }: Props) {
 			/>
 			<label htmlFor="file" className="cursor-pointer mr-2">
 				<span className="sr-only">add Image</span>
-				<icon.CloudUploadIcon className="h-5 w-5 text-green-500" />
+				<CloudUploadIcon className="h-5 w-5 text-green-500" />
 			</label>
 			{uploadFiles.length > 0 && (
 				<div

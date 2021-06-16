@@ -9,7 +9,7 @@ export default function File({ files }: Props) {
 		);
 	}
 	return (
-		<div className="grid grid-cols-3 sm:grid-col md:grid-cols-6 px-2 py-4 sm:p-6  border-t gap-2">
+		<div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 px-2 py-4 sm:p-6 border-t gap-2">
 			{files.map(({ id, name, url }) => (
 				<img src={url} alt={name} key={id} className="rounded-md" />
 			))}

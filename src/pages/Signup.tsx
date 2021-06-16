@@ -1,108 +1,116 @@
-import { useEffect, useState } from "react";
-import { Link, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { Form, Formik, FormikHelpers } from "formik";
 
-import AlertComponent from "../Components/AlertComponent";
-import InputField from "../Components/InputField";
-
-import { SIGNUPFIELD } from "../constant/fields";
-import { SIGNUPSCHEMA } from "../constant/schema";
-
 import { useSetAuth } from "../Contexts/useAuthContext";
+import { signupValidation } from "../validation/signupValidation";
 import { Auth } from "../lib/firebase";
+import Button from "../ui/Button";
+import Input from "../ui/Input";
+import Card from "../ui/Card";
+import Container from "../ui/Container";
+import Anchor from "../ui/Anchor";
+import Center from "../ui/Center";
+
+const initialState = {
+	email: "",
+	password: "",
+	confirmPassword: "",
+};
 
 export default function Signup() {
-	const [error, setError] = useState("");
-
 	const history = useHistory();
 	const setCurrentUser = useSetAuth();
-
-	useEffect(() => {
-		document.title = "Sign Up - Google Drive";
-	}, []);
 
 	const handleSubmit: handleSubmitType = (
 		{ email, password, confirmPassword },
 		{ setSubmitting, setErrors }
 	) => {
-		if (password === confirmPassword) {
-			Auth.createUserWithEmailAndPassword(email, password)
-				.then(({ user }) => {
-					setCurrentUser && setCurrentUser(user);
-					history.push("/");
-				})
-				.catch(({ message, code }) => {
-					let val = message;
-					if (code === "auth/email-already-in-use") {
-						val = "User Already Exists";
-					}
-					setError(val);
-					setSubmitting(false);
-				});
-		} else {
+		if (password !== confirmPassword) {
 			setErrors({
-				password: "*Password Don't Match",
-				confirmPassword: "*Password Don't Match",
+				password: "Password Don't Match",
+				confirmPassword: "Password Don't Match",
 			});
 			setSubmitting(false);
+			return;
 		}
+
+		Auth.createUserWithEmailAndPassword(email, password)
+			.then(({ user }) => {
+				setCurrentUser && setCurrentUser(user);
+				history.push("/");
+			})
+			.catch(({ message, code }) => {
+				let val = message;
+				if (code === "auth/email-already-in-use") {
+					val = "User Already Exists";
+				}
+				setErrors({
+					email: val,
+				});
+				setSubmitting(false);
+			});
 	};
 
 	return (
-		<div className="container mt-24">
-			<div className="card space-y-2">
-				<AlertComponent message={error} />
+		<Container className="mt-24">
+			<Card className="space-y-2">
 				<Formik
-					initialValues={{
-						email: "",
-						password: "",
-						confirmPassword: "",
-					}}
-					validationSchema={SIGNUPSCHEMA}
+					initialValues={initialState}
+					validate={signupValidation}
 					onSubmit={handleSubmit}
 				>
 					{({ errors, isSubmitting }) => (
 						<Form
-							className="space-y-3"
+							className="space-y-2 sm:space-y-3 md:space-y-4"
 							title="signup"
 							autoComplete="off"
 						>
-							{SIGNUPFIELD.map((val) => (
-								<InputField
-									{...val}
-									key={val.name}
-									errors={errors}
-								/>
-							))}
-							<button
+							<Input
+								type="email"
+								name="email"
+								as="field"
+								placeholder="Enter Email"
+								errors={errors}
+								required={true}
+								autoFocus={true}
+							/>
+							<Input
+								type="password"
+								name="password"
+								as="field"
+								placeholder="Enter Password"
+								errors={errors}
+								required={true}
+							/>
+							<Input
+								type="password"
+								name="confirmPassword"
+								as="field"
+								placeholder="Enter ConFirm Password"
+								errors={errors}
+								required={true}
+							/>
+							<Button
+								title="Sign Up"
 								disabled={isSubmitting}
 								type="submit"
-								className="btn btn-primary block w-full "
-							>
-								<strong>Signup</strong>
-							</button>
+								className=" block w-full "
+							/>
 						</Form>
 					)}
 				</Formik>
-
-				<div className="text-center">
-					<span className="text-sm font-light">
+				<Center className="space-x-2">
+					<span className="text-xs font-light">
 						Already have a Account
 					</span>
-					<Link to="/login" className="link">
-						Log In
-					</Link>
-				</div>
-			</div>
-		</div>
+					<Anchor title="Log In" to="/login" />
+				</Center>
+			</Card>
+		</Container>
 	);
 }
 
-interface InitialState {
-	email: string;
-	password: string;
-	confirmPassword: string;
-}
+type InitialState = typeof initialState;
 
 type handleSubmitType = (
 	values: InitialState,

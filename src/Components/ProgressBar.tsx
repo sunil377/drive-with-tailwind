@@ -1,6 +1,8 @@
 import { Dispatch, SetStateAction } from "react";
 import { uploadFileType } from "../types/types";
-import icon from "../asset/svg";
+import ExclamationCircleIcon from "@heroicons/react/solid/ExclamationCircleIcon";
+import PauseIcon from "@heroicons/react/solid/PauseIcon";
+import PlayIcon from "@heroicons/react/solid/PlayIcon";
 
 export default function ProgressBar(props: Props) {
 	const { file, setUploadFiles } = props;
@@ -28,7 +30,7 @@ export default function ProgressBar(props: Props) {
 
 				{failed ? (
 					<button className="text-red-600" onClick={handleClose}>
-						<icon.ExclamationCircleIcon className="h-5 w-5 text-red-500" />
+						<ExclamationCircleIcon className="h-5 w-5 text-red-500" />
 					</button>
 				) : (
 					<button
@@ -40,9 +42,9 @@ export default function ProgressBar(props: Props) {
 						className="text-blue-600"
 					>
 						{paused ? (
-							<icon.PlayIcon className="h-5 w-5 text-indigo-500" />
+							<PlayIcon className="h-5 w-5 text-indigo-500" />
 						) : (
-							<icon.PauseIcon className="h-5 w-5 text-red-500" />
+							<PauseIcon className="h-5 w-5 text-red-500" />
 						)}
 					</button>
 				)}

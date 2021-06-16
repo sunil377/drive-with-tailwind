@@ -15,7 +15,7 @@ export const createFolder = ({
 		.then(({ docs }) =>
 			docs.forEach((doc) => {
 				if (doc.exists) {
-					throw new Error(`*${name} folder name  already exists`);
+					throw new Error(`*${name} Folder Name  Already Exists`);
 				}
 			})
 		)

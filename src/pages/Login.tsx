@@ -1,29 +1,29 @@
-import { useEffect, useState } from "react";
-import { Link, useHistory } from "react-router-dom";
-import { Form, Formik, FormikHelpers } from "formik";
+import { useHistory } from "react-router-dom";
 
 import { useSetAuth } from "../Contexts/useAuthContext";
 import { Auth } from "../lib/firebase";
+import { Formik, Form, FormikHelpers } from "formik";
+import { loginValidation } from "../validation/loginValidation";
 
-import AlertComponent from "../Components/AlertComponent";
-import InputField from "../Components/InputField";
+import Input from "../ui/Input";
+import Button from "../ui/Button";
+import Card from "../ui/Card";
+import Container from "../ui/Container";
+import Anchor from "../ui/Anchor";
+import Center from "../ui/Center";
 
-import { LOGINSCHEMA } from "../constant/schema";
-import { LOGINFIELD } from "../constant/fields";
+const initialState = {
+	email: "",
+	password: "",
+};
 
 export default function Login() {
-	const [error, setError] = useState("");
 	const setCurrentUser = useSetAuth();
-
 	const history = useHistory();
 
-	useEffect(() => {
-		document.title = "Log In - Google Drive";
-	}, []);
-
-	const handleSubmit: handleSubmitType = async (
+	const handleSubmit: onSubmitType = async (
 		{ email, password },
-		{ setSubmitting }
+		{ setSubmitting, setErrors }
 	) => {
 		try {
 			const { user } = await Auth.signInWithEmailAndPassword(
@@ -33,25 +33,21 @@ export default function Login() {
 			setCurrentUser && setCurrentUser(user);
 			history.push("/");
 		} catch ({ code, message }) {
-			let errMessage = "No User Founds";
 			if (code === "auth/wrong-password") {
-				errMessage = "Wrong Password";
+				setErrors({ password: "Wrong Password" });
+			} else {
+				setErrors({ email: "No User Founds" });
 			}
-			setError(errMessage);
 			setSubmitting(false);
 		}
 	};
 
 	return (
-		<div className="container mt-24">
-			<div className="card space-y-2">
-				<AlertComponent message={error} />
+		<Container className="mt-24">
+			<Card className="space-y-2">
 				<Formik
-					initialValues={{
-						email: "",
-						password: "",
-					}}
-					validationSchema={LOGINSCHEMA}
+					initialValues={initialState}
+					validate={loginValidation}
 					onSubmit={handleSubmit}
 				>
 					{({ isSubmitting, errors }) => (
@@ -60,43 +56,49 @@ export default function Login() {
 							title="login"
 							autoComplete="off"
 						>
-							{LOGINFIELD.map((val) => (
-								<InputField
-									{...val}
-									key={val.name}
-									errors={errors}
-								/>
-							))}
-							<button
-								type="submit"
-								className="btn btn-primary w-full"
+							<Input
+								type="email"
+								name="email"
+								as="field"
+								placeholder="Enter Email"
+								errors={errors}
+								required={true}
+								autoFocus={true}
+							/>
+							<Input
+								type="password"
+								name="password"
+								as="field"
+								placeholder="Enter Password"
+								errors={errors}
+								required={true}
+							/>
+							<Button
+								title="Log In"
 								disabled={isSubmitting}
-							>
-								<strong>Log In</strong>
-							</button>
+								type="submit"
+								className=" block w-full"
+							/>
+							<Center>
+								<Anchor
+									to="/forgotpassword"
+									title="Forgotten Password ?"
+									className="text-xs align-middle"
+								/>
+							</Center>
 						</Form>
 					)}
 				</Formik>
-				<div className="text-center space-y-2">
-					<Link to="/forgotpassword" className="link text-sm">
-						Forgotten Password ?
-					</Link>
-					<hr />
-					<Link to="/signup" className="btn btn-success">
-						Create New Account
-					</Link>
-				</div>
-			</div>
-		</div>
+				<hr />
+				<Center className=" space-y-2">
+					<Anchor to="/signup" title="Create New Account" />
+				</Center>
+			</Card>
+		</Container>
 	);
 }
 
-interface InitialState {
-	email: string;
-	password: string;
-}
-
-type handleSubmitType = (
-	values: InitialState,
-	formikHelpers: FormikHelpers<InitialState>
+type onSubmitType = (
+	values: typeof initialState,
+	formikHelpers: FormikHelpers<typeof initialState>
 ) => void | Promise<any>;

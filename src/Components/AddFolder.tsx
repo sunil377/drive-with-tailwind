@@ -1,27 +1,38 @@
-import { useState } from "react";
-import { Dialog } from "@headlessui/react";
-
-import Modal from "../modal/AddFolder/Modal";
-import icon from "../asset/svg";
+import { useState, useRef } from "react";
+import { createPortal } from "react-dom";
+import FolderAddIcon from "@heroicons/react/solid/FolderAddIcon";
+import Modal from "./Modal";
 
 export default function AddFolder({ currentFolderId, currentPath }: Props) {
-	const [isOpen, setIsOpen] = useState(false);
+	const [isOpen, setIsOpen] = useState(true);
+
+	const btnRef = useRef<HTMLButtonElement>(null);
+
+	const handleClick = () => {
+		setIsOpen(true);
+	};
+
+	const handleClose = () => {
+		setIsOpen(false);
+		btnRef.current?.focus();
+	};
 
 	return (
 		<>
-			<button onClick={() => setIsOpen(true)}>
+			<button onClick={handleClick} ref={btnRef}>
 				<span className="sr-only">Add Folder</span>
-				<icon.FolderAddIcon className="h-5 w-5 text-green-500" />
+				<FolderAddIcon className="h-5 w-5 text-green-500" />
 			</button>
-
-			<Dialog open={isOpen} onClose={() => setIsOpen(false)}>
-				<Dialog.Overlay />
-				<Modal
-					setShowModal={setIsOpen}
-					currentFolderId={currentFolderId}
-					currentPath={currentPath}
-				/>
-			</Dialog>
+			{isOpen &&
+				createPortal(
+					<Modal
+						currentFolderId={currentFolderId}
+						currentPath={currentPath}
+						show={isOpen}
+						handleClose={handleClose}
+					/>,
+					document.getElementById("modal")!
+				)}
 		</>
 	);
 }

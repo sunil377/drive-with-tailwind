@@ -4,6 +4,7 @@ import produce from "immer";
 import { Auth } from "../lib/firebase";
 import AlertComponent from "../Components/AlertComponent";
 import { useInputChange } from "../hooks/useInputChange";
+import Button from "../ui/Button";
 
 const ForgotPassword = () => {
 	const [state, setState] = useState({
@@ -70,15 +71,12 @@ const ForgotPassword = () => {
 						{...email}
 						className="input"
 					/>
-
-					<button
+					<Button
+						title="Reset Password"
 						disabled={loading}
 						type="submit"
-						className="btn btn-primary block w-full"
-						aria-disabled={loading}
-					>
-						Reset Password
-					</button>
+						className="block w-full"
+					/>
 				</form>
 			</div>
 		</div>

@@ -2,6 +2,9 @@ import { useEffect, useState } from "react";
 
 import AlertComponent from "../Components/AlertComponent";
 import { useAuth } from "../Contexts/useAuthContext";
+import Button from "../ui/Button";
+import Card from "../ui/Card";
+import Container from "../ui/Container";
 
 export default function Profile() {
 	useEffect(() => {
@@ -42,12 +45,13 @@ export default function Profile() {
 	const { error, loading, message } = state;
 
 	return (
-		<div className="container mt-24 ">
-			<div className="card space-y-2 md:space-y-4 ">
+		<Container className="container mt-24 ">
+			<Card className="card space-y-2 md:space-y-4 ">
 				<h1 className="text-lg">
 					<strong>Profile</strong>
 				</h1>
-				<h2 className="">
+
+				<h2>
 					<strong className="text-blue-600"> Email: </strong>
 					<em>{currentUser && currentUser.email}</em>
 				</h2>
@@ -55,18 +59,17 @@ export default function Profile() {
 				{currentUser && currentUser.emailVerified ? (
 					<strong>Email verified</strong>
 				) : (
-					<button
+					<Button
+						title="Verify Email"
 						disabled={loading}
-						className="btn btn-primary w-full"
+						className="block w-full"
 						onClick={handleVerifyEmail}
-					>
-						Verify Email
-					</button>
+					/>
 				)}
 
 				<AlertComponent message={error} />
 				<AlertComponent message={message} variant="bg-green-500" />
-			</div>
-		</div>
+			</Card>
+		</Container>
 	);
 }

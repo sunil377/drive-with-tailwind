@@ -1,47 +1,5 @@
 @tailwind base;
 @tailwind components;
-
-.alert {
-	@apply block py-2 text-white text-center rounded-md bg-red-500 capitalize;
-}
-
-.btn {
-	@apply px-2 sm:px-4 py-2 inline-block rounded-md border  disabled:cursor-not-allowed disabled:opacity-50;
-}
-
-.btn-primary {
-	@apply border-transparent hover:border-indigo-500 text-gray-100  hover:text-indigo-500 bg-indigo-500 hover:bg-white dark:hover:bg-gray-200 disabled:text-white disabled:bg-indigo-500 transition-colors duration-200 ease-in-out;
-}
-
-.btn-outline-secondary {
-	@apply border-gray-800 hover:border-transparent text-black  dark:text-gray-300 hover:text-white  bg-white hover:bg-gray-800 dark:bg-gray-900 dark:hover:bg-gray-500 disabled:text-gray-800 disabled:bg-white transition-colors duration-200 ease-in-out;
-}
-
-.btn-success {
-	@apply border-transparent hover:border-green-500 text-white  hover:text-green-500 bg-green-500 hover:bg-white dark:hover:bg-gray-200 disabled:text-white disabled:bg-green-500 transition-colors duration-200 ease-in-out;
-}
-
-.btn-outline-primary {
-	@apply border-indigo-500 hover:border-transparent text-indigo-500 disabled:text-indigo-500 hover:text-white dark:hover:text-gray-300 hover:bg-indigo-500 transition-colors duration-200 ease-in-out;
-}
-
-.navLink {
-	@apply block px-1 sm:px-4 py-2 hover:text-indigo-500 dark:text-gray-300 hover:underline outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-400 rounded-md border border-transparent;
-}
-
-.link {
-	@apply px-4 py-2 hover:underline text-indigo-500 outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-400 rounded-md border border-transparent;
-}
-
-.input {
-	@apply py-2 px-4 block w-full border  border-gray-300 bg-white dark:bg-gray-300
-	dark:text-black rounded-md outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-400;
-}
-
-.card {
-	@apply p-6 shadow-lg bg-white dark:bg-gray-800 dark:text-gray-300 max-w-xs sm:max-w-md mx-auto rounded-lg;
-}
-
 @tailwind utilities;
 
 .upload:focus + label {

@@ -2,7 +2,7 @@ import { useLocation } from "react-router";
 import { Link } from "react-router-dom";
 
 import { folderType } from "../hooks/useFolder";
-import icon from "../asset/svg";
+import FolderIcon from "@heroicons/react/solid/FolderIcon";
 
 export default function Folder({ folders }: Props): JSX.Element | null {
 	const { state } = useLocation<null | { id: string; name: string }[]>();
@@ -22,11 +22,10 @@ export default function Folder({ folders }: Props): JSX.Element | null {
 					<Link
 						to={to}
 						key={id}
-						className="btn btn-outline-secondary flex m-1 sm:m-2 space-x-1 items-center"
-						style={{ maxWidth: "200px" }}
+						className="flex m-1 sm:m-2 space-x-1 items-center border border-black  dark:border-white dark:text-white rounded-md p-1 dark:bg-gray-800 hover:bg-black dark:hover:bg-white dark:hover:text-black hover:text-white transition duration-200 ease-in-out transform sc"
 					>
-						<icon.FolderIcon className="h-5 w-5 flex-shrink-0" />
-						<span className="truncate">{name}</span>
+						<FolderIcon className="h-5 w-5 flex-shrink-0" />
+						<span className="truncate w-20 text-sm">{name}</span>
 					</Link>
 				);
 			})}

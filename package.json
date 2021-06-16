@@ -19,15 +19,14 @@
 		"react-router-dom": "^5.2.0",
 		"react-scripts": "^4.0.3",
 		"typescript": "^4.1.5",
-		"web-vitals": "^1.1.0",
-		"yup": "^0.32.9"
+		"web-vitals": "^1.1.0"
 	},
 	"scripts": {
 		"start": "craco start",
 		"build": "craco build",
 		"test": "craco test",
 		"eject": "react-scripts eject",
-		"analyze": "source-map-explorer build/static/js/2.*"
+		"analyze": "source-map-explorer build/static/js/3.*"
 	},
 	"eslintConfig": {
 		"extends": [

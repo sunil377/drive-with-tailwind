@@ -13,10 +13,12 @@ import Signup from "./pages/Signup";
 import Profile from "./pages/Profile";
 import ForgotPassword from "./pages/ForgotPassword";
 import Login from "./pages/Login";
+import { useTitle } from "./hooks/useTitle";
 
 const Dashboard = lazy(() => import("./pages/Dashboard"));
 
 export default function App() {
+	useTitle();
 	return (
 		<AuthProvider>
 			<ErrorBoundary>
