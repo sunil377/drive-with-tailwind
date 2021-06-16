@@ -1,5 +1,7 @@
 import { validateType } from "../types/types";
 
+const EMAIL_PATTERN = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
+
 export const signupValidation: validateType<InitialState> = ({
 	email,
 	password,
@@ -11,30 +13,29 @@ export const signupValidation: validateType<InitialState> = ({
 		confirmPassword?: string;
 	} = {};
 
-	if (email.trim() === "") {
-		err.email = "Required";
-	} else if (email.match(/[\s]/)) {
-		err.email = "Invalid Email, Space Are Not Allowed";
-	} else if (email.match(/[<>]/)) {
-		err.email = "Invalid Email, Special Chracters Are Not Allowed";
-	} else if (!email.match(/^[a-z0-9._%+-]+@[a-z0-9]+\.[a-z]{2,4}$/i)) {
-		err.email = "Invalid Email";
+	switch (true) {
+		case email.trim() === "":
+			err.email = "Required";
+			break;
+		case !EMAIL_PATTERN.test(email):
+			err.email = "Invalid Email";
+			break;
+
+		case password.trim() === "":
+			err.password = "Required";
+			break;
+		case password.trim().length < 6:
+			err.password = "Password Should Be 6 Charactor long";
+			break;
+
+		case confirmPassword.trim() === "":
+			err.confirmPassword = "Required";
+			break;
+		case confirmPassword.trim().length < 6:
+			err.confirmPassword = "Password Should Be 6 Charactor long";
+			break;
 	}
 
-	if (password.trim() === "") {
-		err.password = "Required";
-	} else if (password.trim().length < 6) {
-		err.password = "Password Should Be 6 Charactor long";
-	} else if (!password.match(/^\w{6,}$/)) {
-		err.password = "Invalid Password, Space Are Not Allowed";
-	}
-	if (confirmPassword.trim() === "") {
-		err.confirmPassword = "Required";
-	} else if (confirmPassword.trim().length < 6) {
-		err.confirmPassword = "Password Should Be 6 Charactor long";
-	} else if (!password.match(/^\w{6,}$/)) {
-		err.confirmPassword = "Invalid Password, Space Are Not Allowed";
-	}
 	return err;
 };
 

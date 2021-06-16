@@ -1,6 +1,6 @@
 import { useHistory } from "react-router-dom";
-import { useMemo } from "react";
-import { Formik, Form } from "formik";
+import { FC, useMemo, useRef } from "react";
+import { Formik, Form, FormikErrors } from "formik";
 
 import { useSetAuth } from "../Contexts/useAuthContext";
 import { Auth } from "../lib/firebase";
@@ -13,6 +13,7 @@ import Card from "../ui/Card";
 import Container from "../ui/Container";
 import Anchor from "../ui/Anchor";
 import Center from "../ui/Center";
+import { useEffect } from "react";
 
 export default function Login() {
 	const setCurrentUser = useSetAuth();
@@ -55,44 +56,9 @@ export default function Login() {
 					validate={loginValidation}
 					onSubmit={handleSubmit}
 				>
-					{({ isSubmitting, errors }) => (
-						<Form
-							className="space-y-2"
-							title="login"
-							autoComplete="off"
-						>
-							<Input
-								type="email"
-								name="email"
-								as="field"
-								placeholder="Enter Email"
-								errors={errors}
-								required={true}
-								autoFocus={true}
-							/>
-							<Input
-								type="password"
-								name="password"
-								as="field"
-								placeholder="Enter Password"
-								errors={errors}
-								required={true}
-							/>
-							<Button
-								title="Log In"
-								disabled={isSubmitting}
-								type="submit"
-								className=" block w-full"
-							/>
-							<Center>
-								<Anchor
-									to="/forgotpassword"
-									title="Forgotten Password ?"
-									className="text-xs align-middle"
-								/>
-							</Center>
-						</Form>
-					)}
+					{(props) => {
+						return <LoginForm {...props} />;
+					}}
 				</Formik>
 				<hr />
 				<Center className=" space-y-2">
@@ -102,3 +68,89 @@ export default function Login() {
 		</Container>
 	);
 }
+
+type InitialState = {
+	email: string;
+	password: string;
+};
+
+const LoginForm: FC<{
+	errors: FormikErrors<InitialState>;
+	isSubmitting: boolean;
+}> = ({ errors, isSubmitting }) => {
+	const loginRef = useRef<HTMLFormElement>(null);
+	const isSubmit = useRef(false);
+
+	const loginRefCurrent = loginRef.current;
+	const isSubmitRefCurrent = isSubmit.current;
+
+	const tabList = useMemo(() => {
+		const res =
+			loginRefCurrent && loginRefCurrent.querySelectorAll("input");
+		if (res) {
+			return res;
+		}
+		return null;
+	}, [loginRefCurrent]);
+
+	useEffect(() => {
+		if (isSubmitRefCurrent && tabList) {
+			const keys = Object.keys(errors);
+			if (keys.length > 0) {
+				tabList.forEach((ele) => {
+					if (ele.name === keys[0]) {
+						ele.focus();
+					}
+				});
+				isSubmit.current = false;
+			}
+		}
+	}, [isSubmitRefCurrent, errors, tabList]);
+
+	useEffect(() => {
+		if (isSubmitting) {
+			isSubmit.current = true;
+		}
+	}, [isSubmitting]);
+
+	return (
+		<Form
+			className="space-y-2"
+			title="login"
+			autoComplete="off"
+			noValidate
+			ref={loginRef}
+		>
+			<Input
+				type="email"
+				name="email"
+				as="field"
+				placeholder="Enter Email"
+				errors={errors}
+				required={true}
+				autoFocus={true}
+			/>
+			<Input
+				type="password"
+				name="password"
+				as="field"
+				placeholder="Enter Password"
+				errors={errors}
+				required={true}
+			/>
+			<Button
+				title="Log In"
+				disabled={isSubmitting}
+				type="submit"
+				className=" block w-full"
+			/>
+			<Center>
+				<Anchor
+					to="/forgotpassword"
+					title="Forgotten Password ?"
+					className="text-xs align-middle"
+				/>
+			</Center>
+		</Form>
+	);
+};

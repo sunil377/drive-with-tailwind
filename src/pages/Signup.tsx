@@ -1,6 +1,6 @@
 import { useHistory } from "react-router-dom";
-import { Form, Formik } from "formik";
-import { useMemo } from "react";
+import { Form, Formik, FormikErrors } from "formik";
+import { FC, useMemo } from "react";
 
 import { useSetAuth } from "../Contexts/useAuthContext";
 import { signupValidation } from "../validation/signupValidation";
@@ -13,6 +13,8 @@ import Container from "../ui/Container";
 import Anchor from "../ui/Anchor";
 import Center from "../ui/Center";
 import { onSubmitType } from "../types/types";
+import { useRef } from "react";
+import { useEffect } from "react";
 
 export default function Signup() {
 	const history = useHistory();
@@ -65,45 +67,7 @@ export default function Signup() {
 					validate={signupValidation}
 					onSubmit={handleSubmit}
 				>
-					{({ errors, isSubmitting }) => (
-						<Form
-							className="space-y-2 sm:space-y-3 md:space-y-4"
-							title="signup"
-							autoComplete="off"
-						>
-							<Input
-								type="email"
-								name="email"
-								as="field"
-								placeholder="Enter Email"
-								errors={errors}
-								required={true}
-								autoFocus={true}
-							/>
-							<Input
-								type="password"
-								name="password"
-								as="field"
-								placeholder="Enter Password"
-								errors={errors}
-								required={true}
-							/>
-							<Input
-								type="password"
-								name="confirmPassword"
-								as="field"
-								placeholder="Enter ConFirm Password"
-								errors={errors}
-								required={true}
-							/>
-							<Button
-								title="Sign Up"
-								disabled={isSubmitting}
-								type="submit"
-								className=" block w-full "
-							/>
-						</Form>
-					)}
+					{({ ...props }) => <SignupForm {...props} />}
 				</Formik>
 				<Center className="space-x-2">
 					<span className="text-xs font-light">
@@ -115,3 +79,83 @@ export default function Signup() {
 		</Container>
 	);
 }
+
+const SignupForm: FC<{
+	errors: FormikErrors<{
+		email: string;
+		password: string;
+		confirmPassword: string;
+	}>;
+	isSubmitting: boolean;
+}> = ({ errors, isSubmitting }) => {
+	const isSubmit = useRef(false);
+	const signupRef = useRef<HTMLFormElement>(null);
+
+	const signupCurrent = signupRef.current;
+	const isSubmitCurrent = isSubmit.current;
+
+	const tabList = useMemo(() => {
+		return signupCurrent && signupCurrent.querySelectorAll("input");
+	}, [signupCurrent]);
+
+	useEffect(() => {
+		if (isSubmitCurrent && tabList) {
+			const keys = Object.keys(errors);
+			if (keys.length > 0) {
+				tabList.forEach((ele) => {
+					if (ele.name === keys[0]) {
+						ele.focus();
+					}
+				});
+				isSubmit.current = false;
+			}
+		}
+	}, [isSubmitCurrent, tabList, errors]);
+
+	useEffect(() => {
+		if (isSubmitting) {
+			isSubmit.current = true;
+		}
+	}, [isSubmitting]);
+	return (
+		<Form
+			className="space-y-2 sm:space-y-3 md:space-y-4"
+			title="signup"
+			autoComplete="off"
+			ref={signupRef}
+			noValidate
+		>
+			<Input
+				type="email"
+				name="email"
+				as="field"
+				placeholder="Enter Email"
+				errors={errors}
+				required={true}
+				autoFocus={true}
+			/>
+			<Input
+				type="password"
+				name="password"
+				as="field"
+				placeholder="Enter Password"
+				errors={errors}
+				required={true}
+			/>
+			<Input
+				type="password"
+				name="confirmPassword"
+				as="field"
+				placeholder="Enter ConFirm Password"
+				errors={errors}
+				required={true}
+			/>
+			<Button
+				title="Sign Up"
+				disabled={isSubmitting}
+				type="submit"
+				className=" block w-full "
+			/>
+		</Form>
+	);
+};

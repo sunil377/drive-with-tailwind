@@ -1,6 +1,6 @@
 import { validateType } from "../types/types";
 
-const EMAIL_PATTERN = /[a-z0-9._%+-]+@[a-z0-9]+\.[a-z]{2,4}$/i;
+const EMAIL_PATTERN = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
 
 export const loginValidation: validateType<InitialState> = ({
 	email,
@@ -11,16 +11,22 @@ export const loginValidation: validateType<InitialState> = ({
 		password?: string;
 	} = {};
 
-	if (email.trim() === "") {
-		err.email = "Required";
-	} else if (!email.match(EMAIL_PATTERN)) {
-		err.email = "Invalid Email";
+	switch (true) {
+		case email.trim() === "":
+			err.email = "Required";
+			break;
+		case !EMAIL_PATTERN.test(email):
+			err.email = "Invalid Email";
+			break;
+
+		case password.trim() === "":
+			err.password = "Required";
+			break;
+		case password.trim().length < 6:
+			err.password = "Password Should Be Minimum 6 Charactor Long";
+			break;
 	}
-	if (password.trim() === "") {
-		err.password = "Required";
-	} else if (password.trim().length < 6) {
-		err.password = "Password Should Be Minimum 6 Charactor Long";
-	}
+
 	return err;
 };
 type InitialState = {

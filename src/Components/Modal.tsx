@@ -145,7 +145,6 @@ export default function Modal({
 									errors={errors}
 									as="field"
 									autoFocus={true}
-									active={"true"}
 								/>
 								<div className="flex space-x-2 sm:space-x-4 justify-end ">
 									<Button
