@@ -1,6 +1,7 @@
 import { Dispatch, SetStateAction } from "react";
 import { database, storage, userType } from "../lib/firebase";
 import { uploadFileType } from "../types/types";
+import { thumbnail } from "./thumbnail";
 
 export default function handleCreateFile({
 	fileList,
@@ -64,18 +65,22 @@ export default function handleCreateFile({
 									.update({ url: downloadURL })
 									.then(() => handleRemove(uploadData.id));
 							} else {
-								database.files
-									.add({
-										name,
-										url: downloadURL,
-										path: currentPath,
-										type,
-										userId: uid,
-										createdAt:
-											database.getCurrentTimeStamp(),
-									})
-									.then(() => {
-										handleRemove(uploadData.id);
+								thumbnail(fileList)
+									.then((thumbURL) => {
+										return database.files
+											.add({
+												name,
+												url: downloadURL,
+												path: currentPath,
+												type,
+												thumbURL,
+												userId: uid,
+												createdAt:
+													database.getCurrentTimeStamp(),
+											})
+											.then(() => {
+												handleRemove(uploadData.id);
+											});
 									})
 									.catch(() =>
 										uplink.snapshot.ref

@@ -5,9 +5,10 @@ import AddFolder from "../Components/AddFolder";
 import AddFile from "../Components/AddFile";
 import Folder from "../Components/Folder";
 import File from "../Components/File";
+import { Suspense } from "react";
 
 export default function Dashboard() {
-	const { folders, selectedFolder, currentPath, files } = useFolder();
+	const { selectedFolder, currentPath } = useFolder();
 
 	return (
 		<div className="container mx-auto mt-10 rounded-lg overflow-hidden shadow-lg bg-white dark:bg-gray-700">
@@ -22,8 +23,9 @@ export default function Dashboard() {
 				</div>
 			</div>
 
-			<Folder folders={folders} />
-			<File files={files} />
+			<Folder />
+
+			<File currentPath={currentPath} />
 		</div>
 	);
 }

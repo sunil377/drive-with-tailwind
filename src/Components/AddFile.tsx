@@ -1,11 +1,11 @@
 import { ChangeEvent, useState } from "react";
 
 import { useAuth } from "../Contexts/useAuthContext";
-import { currentPathType } from "../hooks/useFolder";
 import handleCreateFile from "../helper/handleCreateFile";
 import ProgressBar from "./ProgressBar";
 import { uploadFileType } from "../types/types";
 import CloudUploadIcon from "@heroicons/react/solid/CloudUploadIcon";
+import { currentPathType } from "../types/firebaseType";
 
 export default function AddFile({ currentPath }: Props) {
 	const currentUser = useAuth();

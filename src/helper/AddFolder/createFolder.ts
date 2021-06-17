@@ -1,5 +1,5 @@
-import { currentPathType } from "../../hooks/useFolder";
 import { database, userType } from "../../lib/firebase";
+import { currentPathType } from "../../types/firebaseType";
 
 export const createFolder = ({
 	currentUser,

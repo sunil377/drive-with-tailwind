@@ -3,7 +3,6 @@ import { Form, Formik, FormikErrors } from "formik";
 
 import { useAuth } from "../Contexts/useAuthContext";
 import { createFolder } from "../helper/AddFolder/createFolder";
-import { currentPathType } from "../hooks/useFolder";
 
 import Button from "../ui/Button";
 import Container from "../ui/Container";
@@ -11,6 +10,7 @@ import Card from "../ui/Card";
 import Input from "../ui/Input";
 import { onSubmitType, validateType } from "../types/types";
 import { FC } from "react";
+import { currentPathType } from "../types/firebaseType";
 
 const keyList: Record<string, Boolean> = {};
 
@@ -108,6 +108,7 @@ export default function Modal({
 			})
 				.then(() => {
 					setSubmitting(false);
+					handleClose();
 				})
 				.catch(({ message }) => {
 					setErrors({
