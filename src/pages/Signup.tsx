@@ -6,13 +6,15 @@ import { useSetAuth } from "../Contexts/useAuthContext";
 import { signupValidation } from "../validation/signupValidation";
 import { Auth } from "../lib/firebase";
 
-import Button from "../ui/Button";
-import Input from "../ui/Input";
-import Card from "../ui/Card";
-import Container from "../ui/Container";
-import Anchor from "../ui/Anchor";
-import Center from "../ui/Center";
 import { onSubmitType } from "../types/types";
+import {
+	Container,
+	Card,
+	Center,
+	Anchor,
+	Input,
+	Button,
+} from "../ui";
 
 export default function Signup() {
 	const history = useHistory();
@@ -46,12 +48,11 @@ export default function Signup() {
 				history.push("/");
 			})
 			.catch(({ message, code }) => {
-				let val = message;
-				if (code === "auth/email-already-in-use") {
-					val = "User Already Exists";
-				}
 				setErrors({
-					email: val,
+					email:
+						code === "auth/email-already-in-use"
+							? "User Already Exists"
+							: message,
 				});
 				setSubmitting(false);
 			});
@@ -89,30 +90,27 @@ const SignupForm: FC<{
 	const isSubmit = useRef(false);
 	const signupRef = useRef<HTMLFormElement>(null);
 
-	const isSubmitRefCurrent = isSubmit.current;
-
 	useEffect(() => {
-		if (isSubmitRefCurrent) {
-			const keys = Object.keys(errors);
-			const tabList =
-				signupRef.current &&
-				signupRef.current.querySelectorAll("input");
-			if (keys.length > 0 && tabList) {
-				tabList.forEach((ele) => {
-					if (ele.name === keys[0]) {
-						ele.focus();
-					}
-				});
-				isSubmit.current = false;
-			}
-		}
-	}, [errors, isSubmitRefCurrent]);
+		if (!isSubmit.current || !signupRef.current) return;
+
+		const keys = Object.keys(errors);
+		const tabList = signupRef.current.querySelectorAll("input");
+
+		if (keys.length === 0 || !tabList) return;
+
+		Array.from(tabList).find(
+			(ele) => ele.name === keys[0] && ele.focus()
+		);
+
+		isSubmit.current = false;
+	}, [errors]);
 
 	useEffect(() => {
 		if (isSubmitting) {
 			isSubmit.current = true;
 		}
 	}, [isSubmitting]);
+
 	return (
 		<Form
 			className="space-y-2 sm:space-y-3 md:space-y-4"
@@ -128,7 +126,6 @@ const SignupForm: FC<{
 				placeholder="Enter Email"
 				errors={errors}
 				required={true}
-				autoFocus={true}
 			/>
 			<Input
 				type="password"

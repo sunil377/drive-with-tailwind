@@ -32,7 +32,8 @@ export const signupValidation: validateType<InitialState> = ({
 			err.confirmPassword = "Required";
 			break;
 		case confirmPassword.trim().length < 6:
-			err.confirmPassword = "Password Should Be 6 Charactor long";
+			err.confirmPassword =
+				"Password Should Be 6 Charactor long";
 			break;
 	}
 

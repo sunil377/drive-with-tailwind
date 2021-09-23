@@ -1,7 +1,11 @@
 import { FC } from "react";
 
 const Container: Props = ({ children, className = "" }) => {
-	return <div className={"container mx-auto " + className}>{children}</div>;
+	return (
+		<div className={"w-11/12 mx-auto " + className}>
+			{children}
+		</div>
+	);
 };
 
 export default Container;

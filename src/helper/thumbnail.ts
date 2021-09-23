@@ -1,18 +1,16 @@
 export const thumbnail = (file: FileList) => {
-	const { type } = file[0];
-
 	return createImageBitmap(file[0]).then((res) => {
 		const canvas = document.createElement("canvas");
 		const ctx = canvas.getContext("2d");
-
 		const { width, height } = res;
+		const base = 150;
 
 		if (width > height) {
-			canvas.width = 100;
-			canvas.height = (height / width) * 100;
+			canvas.width = base;
+			canvas.height = (height / width) * base;
 		} else {
-			canvas.height = 100;
-			canvas.width = (width / height) * 100;
+			canvas.height = base;
+			canvas.width = (width / height) * base;
 		}
 
 		ctx?.drawImage(res, 0, 0, canvas.width, canvas.height);

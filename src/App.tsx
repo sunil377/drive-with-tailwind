@@ -14,6 +14,8 @@ import Profile from "./pages/Profile";
 import ForgotPassword from "./pages/ForgotPassword";
 import Login from "./pages/Login";
 import { useTitle } from "./hooks/useTitle";
+import { Route } from "react-router-dom";
+import Test from "./Components/Test";
 
 const Dashboard = lazy(() => import("./pages/Dashboard"));
 
@@ -24,25 +26,40 @@ export default function App() {
 			<ErrorBoundary>
 				<Navbar />
 				<Suspense fallback={<div>loading...</div>}>
-					<Switch>
-						<PublicRoute path="/login" component={Login} />
-						<PublicRoute path="/signup" component={Signup} />
-						<PrivateRoute
-							path="/profile"
-							exact
-							component={Profile}
-						/>
-						<PublicRoute
-							path="/forgotpassword"
-							component={ForgotPassword}
-						/>
-						<PrivateRoute
-							path="/folders/:id"
-							exact
-							component={Dashboard}
-						/>
-						<PrivateRoute path="/" exact component={Dashboard} />
-					</Switch>
+					<main>
+						<Switch>
+							<PublicRoute
+								path="/login"
+								component={Login}
+							/>
+							<PublicRoute
+								path="/signup"
+								component={Signup}
+							/>
+							<PrivateRoute
+								path="/profile"
+								exact
+								component={Profile}
+							/>
+							<PublicRoute
+								path="/forgotpassword"
+								component={ForgotPassword}
+							/>
+							<PrivateRoute
+								path="/folders/:id"
+								exact
+								component={Dashboard}
+							/>
+
+							<Route path="/test" component={Test} />
+
+							<PrivateRoute
+								path="/"
+								exact
+								component={Dashboard}
+							/>
+						</Switch>
+					</main>
 				</Suspense>
 			</ErrorBoundary>
 		</AuthProvider>

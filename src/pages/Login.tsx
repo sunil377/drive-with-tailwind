@@ -7,13 +7,15 @@ import { Auth } from "../lib/firebase";
 import { loginValidation } from "../validation/loginValidation";
 import { onSubmitType } from "../types/types";
 
-import Input from "../ui/Input";
-import Button from "../ui/Button";
-import Card from "../ui/Card";
-import Container from "../ui/Container";
-import Anchor from "../ui/Anchor";
-import Center from "../ui/Center";
 import { useEffect } from "react";
+import {
+	Container,
+	Card,
+	Center,
+	Anchor,
+	Input,
+	Button,
+} from "../ui";
 
 export default function Login() {
 	const setCurrentUser = useSetAuth();
@@ -39,18 +41,17 @@ export default function Login() {
 			setCurrentUser && setCurrentUser(user);
 			history.push("/");
 		} catch ({ code, message }) {
-			if (code === "auth/wrong-password") {
-				setErrors({ password: "Wrong Password" });
-			} else {
-				setErrors({ email: "No User Founds" });
-			}
+			code === "auth/wrong-password"
+				? setErrors({ password: "Wrong Password" })
+				: setErrors({ email: "No User Founds" });
+
 			setSubmitting(false);
 		}
 	};
 
 	return (
 		<Container className="mt-24">
-			<Card className="space-y-2">
+			<Card className="space-y-4">
 				<Formik
 					initialValues={initialState}
 					validate={loginValidation}
@@ -61,7 +62,7 @@ export default function Login() {
 					}}
 				</Formik>
 				<hr />
-				<Center className=" space-y-2">
+				<Center className="space-y-2">
 					<Anchor to="/signup" title="Create New Account" />
 				</Center>
 			</Card>
@@ -81,22 +82,20 @@ const LoginForm: FC<{
 	const loginRef = useRef<HTMLFormElement>(null);
 	const isSubmit = useRef(false);
 
-	const isSubmitRefCurrent = isSubmit.current;
-
 	useEffect(() => {
-		if (isSubmitRefCurrent) {
-			const keys = Object.keys(errors);
-			const tabList = loginRef.current?.querySelectorAll("input");
-			if (keys.length > 0 && tabList) {
-				tabList.forEach((ele) => {
-					if (ele.name === keys[0]) {
-						ele.focus();
-					}
-				});
-				isSubmit.current = false;
-			}
-		}
-	}, [isSubmitRefCurrent, errors]);
+		if (!isSubmit.current || !loginRef.current) return;
+
+		const keys = Object.keys(errors);
+		const tabList = loginRef.current.querySelectorAll("input");
+
+		if (keys.length === 0 || !tabList) return;
+
+		Array.from(tabList).find(
+			(ele) => ele.name === keys[0] && ele.focus()
+		);
+
+		isSubmit.current = false;
+	}, [errors]);
 
 	useEffect(() => {
 		if (isSubmitting) {
@@ -119,7 +118,6 @@ const LoginForm: FC<{
 				placeholder="Enter Email"
 				errors={errors}
 				required={true}
-				autoFocus={true}
 			/>
 			<Input
 				type="password"

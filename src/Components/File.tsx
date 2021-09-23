@@ -1,6 +1,5 @@
-import { FC } from "react";
-import { useRef } from "react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef, FC } from "react";
+
 import { useAuth } from "../Contexts/useAuthContext";
 import { useLoading } from "../hooks/useLoading";
 import { database } from "../lib/firebase";
@@ -58,27 +57,28 @@ export default function File({ currentPath }: Props) {
 
 	if (files.length === 0 && status === "success") {
 		return (
-			<div className="p-6 border-t text-sm">
+			<h1 className="p-6 border-t text-sm">
 				<span>No File Added </span>
-			</div>
+			</h1>
 		);
 	}
 
 	if (status === "failed") {
 		return (
-			<div className="p-6 border-t">
+			<h1 className="p-6 border-t">
 				<span>{error} </span>
-			</div>
+			</h1>
 		);
 	}
 
 	return (
-		<div className="flex px-2 py-4 sm:p-6 border-t flex-wrap space-y-1">
+		<div className="flex px-2 py-4 sm:p-6 border-t flex-wrap space-y-1 space-x-4">
 			{files.map((file) => (
 				<a
 					href={file.url}
 					target="_Blank"
-					className="w-32 md:w-36 flex-shrink"
+					className=" flex-shrink"
+					rel="noreferrer"
 					key={file.id}
 				>
 					<ImageComponent file={file} />

@@ -17,7 +17,11 @@ export default function BreadCrumbs({ currentFolder }: Props) {
 
 	return (
 		<div className="inline-flex flex-wrap">
-			<Link to="/" onClick={handleClick} className={rootLinkStyle}>
+			<Link
+				to="/"
+				onClick={handleClick}
+				className={rootLinkStyle}
+			>
 				Root
 			</Link>
 			{state &&
@@ -43,17 +47,23 @@ export default function BreadCrumbs({ currentFolder }: Props) {
 						pathname: `/folders/${val.id}`,
 						state: state.slice(
 							0,
-							state.findIndex((v) => v.id === val.id) + 1
+							state.findIndex((v) => v.id === val.id) +
+								1
 						),
 					};
 
 					return (
-						<div key={val.id} className="inline-flex">
+						<div
+							key={val.id}
+							className="inline-flex space-x-1"
+						>
 							<span className="mx-1 sm:mx-2 font-bold">
 								&#10093;
 							</span>
 							<Link
-								onClick={(e) => active && e.preventDefault()}
+								onClick={(e) =>
+									active && e.preventDefault()
+								}
 								className={"truncate " + linkClass}
 								tabIndex={active ? -1 : 0}
 								to={to}
