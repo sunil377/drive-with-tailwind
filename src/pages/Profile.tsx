@@ -3,7 +3,6 @@ import Alert from "../Components/Alert";
 import { PRIMARY } from "../constant/color";
 import { useAuth } from "../Contexts/useAuthContext";
 import Button from "../ui/Button";
-import Container from "../ui/Container";
 
 export default function Profile() {
   const [state, setState] = useState({
@@ -40,31 +39,29 @@ export default function Profile() {
   const { error, loading, message } = state;
 
   return (
-    <Container className="container mt-24 ">
-      <div className="card">
-        {message && <Alert message={message} variant="success" />}
-        {error && <Alert message={error} variant="alert" />}
-        <h1 className="text-lg">
-          <strong>Profile</strong>
-        </h1>
+    <div className="card mt-24">
+      {message && <Alert message={message} variant="success" />}
+      {error && <Alert message={error} variant="alert" />}
+      <h1 className="text-lg">
+        <strong>Profile</strong>
+      </h1>
 
-        <h2>
-          <strong className="text-blue-500"> Email: </strong>
-          <em>{currentUser && currentUser.email}</em>
-        </h2>
+      <h2>
+        <strong className="text-blue-500"> Email: </strong>
+        <em>{currentUser && currentUser.email}</em>
+      </h2>
 
-        {currentUser && currentUser.emailVerified ? (
-          <strong>Email verified</strong>
-        ) : (
-          <Button
-            disabled={loading}
-            onClick={handleVerifyEmail}
-            varient={PRIMARY}
-          >
-            Verify Email
-          </Button>
-        )}
-      </div>
-    </Container>
+      {currentUser && currentUser.emailVerified ? (
+        <strong>Email verified</strong>
+      ) : (
+        <Button
+          disabled={loading}
+          onClick={handleVerifyEmail}
+          varient={PRIMARY}
+        >
+          Verify Email
+        </Button>
+      )}
+    </div>
   );
 }
