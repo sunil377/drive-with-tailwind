@@ -42,7 +42,6 @@ export const ModalForm: FC<{
         type="text"
         required={true}
         errors={errors}
-        as="field"
         autoFocus={true}
       />
       <div className="flex space-x-2 sm:space-x-4 justify-end ">

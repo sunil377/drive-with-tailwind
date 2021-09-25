@@ -1,14 +1,14 @@
-import { Link, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { Form, Formik, FormikErrors } from "formik";
-import { FC, useEffect, useMemo, useRef } from "react";
+import { FC, Fragment, useEffect, useMemo, useRef } from "react";
 
 import { useSetAuth } from "../Contexts/useAuthContext";
 import { signupValidation } from "../validation/signupValidation";
 import { Auth } from "../lib/firebase";
 
 import { onSubmitType } from "../types/types";
-import { Input } from "../ui";
-import Button from "../ui/Button";
+import { Anchor, Input, Button } from "../ui";
+
 import { PRIMARY } from "../constant/color";
 
 export default function Signup() {
@@ -60,14 +60,18 @@ export default function Signup() {
         validate={signupValidation}
         onSubmit={handleSubmit}
       >
-        {({ ...props }) => <SignupForm {...props} />}
+        {({ ...props }) => (
+          <Fragment>
+            <SignupForm {...props} />
+            <div className="text-center">
+              <span>Already have a Account</span>
+              <Anchor.BASE to="/login" className="inline-block text-lg">
+                Log In
+              </Anchor.BASE>
+            </div>
+          </Fragment>
+        )}
       </Formik>
-      <div className="space-x-4 text-center">
-        <span>Already have a Account</span>
-        <Link to="/login" className="link text-lg">
-          Log In
-        </Link>
-      </div>
     </div>
   );
 }
@@ -113,7 +117,6 @@ const SignupForm: FC<{
       <Input
         type="email"
         name="email"
-        as="field"
         placeholder="Enter Email"
         errors={errors}
         required={true}
@@ -121,7 +124,6 @@ const SignupForm: FC<{
       <Input
         type="password"
         name="password"
-        as="field"
         placeholder="Enter Password"
         errors={errors}
         required={true}
@@ -129,12 +131,11 @@ const SignupForm: FC<{
       <Input
         type="password"
         name="confirmPassword"
-        as="field"
         placeholder="Enter ConFirm Password"
         errors={errors}
         required={true}
       />
-      <Button disabled={isSubmitting} varient={PRIMARY}>
+      <Button disabled={isSubmitting} type="submit" varient={PRIMARY}>
         sign up
       </Button>
     </Form>

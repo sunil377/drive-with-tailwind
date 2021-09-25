@@ -22,7 +22,7 @@ export default function AddFolder({ currentFolderId, currentPath }: Props) {
     <>
       <button onClick={handleClick} ref={btnRef}>
         <span className="sr-only">Add Folder</span>
-        <FolderAddIcon className="h-5 w-5 text-green-500" />
+        <FolderAddIcon className="h-6 w-6 text-green-500" />
       </button>
       {isOpen &&
         createPortal(

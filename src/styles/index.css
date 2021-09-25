@@ -8,12 +8,7 @@
     bg-white dark:bg-gray-800 dark:text-gray-300 
     mx-auto rounded-lg border shadow-md;
   }
-
-  .link {
-    @apply hover:underline focus:underline text-indigo-500 inline-block outline-none;
-  }
-
-  .upload:focus + label {
-    @apply outline-black;
-  }
+}
+.upload:focus + label {
+  outline: auto;
 }

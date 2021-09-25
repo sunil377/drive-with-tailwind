@@ -31,9 +31,9 @@ export default function AddFile({ currentPath }: Props) {
         onChange={handleChange}
         accept="image/*"
       />
-      <label htmlFor="file" className="cursor-pointer mr-2">
+      <label htmlFor="file" className="cursor-pointer mr-4">
         <span className="sr-only">add Image</span>
-        <CloudUploadIcon className="h-5 w-5 text-green-500" />
+        <CloudUploadIcon className="h-6 w-6 text-green-500" />
       </label>
       {uploadFiles.length > 0 && (
         <div

@@ -51,13 +51,15 @@ const ForgotPassword = () => {
   };
 
   return (
-    <Formik
-      initialValues={initialState}
-      onSubmit={handleSubmit}
-      validate={validate}
-    >
-      {(props) => <ForgotPasswordForm {...props} msg={msg} />}
-    </Formik>
+    <div className="mt-24 card">
+      <Formik
+        initialValues={initialState}
+        onSubmit={handleSubmit}
+        validate={validate}
+      >
+        {(props) => <ForgotPasswordForm {...props} msg={msg} />}
+      </Formik>
+    </div>
   );
 };
 
@@ -89,14 +91,13 @@ const ForgotPasswordForm: FC<{
 
   return (
     <Form title="Reset Password" autoComplete="off" noValidate ref={formRef}>
-      <div className="card">
+      <div className="space-y-4">
         {msg && <Alert message={msg} variant="success" />}
         <Input
           type="email"
           placeholder="Enter Email"
           autoFocus={true}
           name="email"
-          as="field"
           required
           errors={errors}
         />

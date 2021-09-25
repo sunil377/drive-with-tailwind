@@ -1,5 +1,5 @@
-import { Link, useHistory } from "react-router-dom";
-import { FC, useMemo, useRef } from "react";
+import { useHistory } from "react-router-dom";
+import { FC, useMemo, useRef, useEffect, Fragment } from "react";
 import { Formik, Form, FormikErrors } from "formik";
 
 import { useSetAuth } from "../Contexts/useAuthContext";
@@ -7,10 +7,8 @@ import { Auth } from "../lib/firebase";
 import { loginValidation } from "../validation/loginValidation";
 import { onSubmitType } from "../types/types";
 
-import { useEffect } from "react";
-import { Input } from "../ui";
-import Button from "../ui/Button";
-import { PRIMARY } from "../constant/color";
+import { Anchor, Input, Button } from "../ui";
+import { PRIMARY, SUCCESS } from "../constant/color";
 
 export default function Login() {
   const setCurrentUser = useSetAuth();
@@ -49,26 +47,26 @@ export default function Login() {
         onSubmit={handleSubmit}
       >
         {(props) => {
-          return <LoginForm {...props} />;
+          return (
+            <Fragment>
+              <LoginForm {...props} />
+              <hr />
+              <Anchor
+                to="/signup"
+                className="w-max mx-auto text-lg"
+                varient={SUCCESS}
+              >
+                Create New Account
+              </Anchor>
+            </Fragment>
+          );
         }}
       </Formik>
-      <hr />
-      <Link to="/signup" className="btn btn-success w-max mx-auto text-xl px-6">
-        Create New Account
-      </Link>
     </div>
   );
 }
 
-type InitialState = {
-  email: string;
-  password: string;
-};
-
-const LoginForm: FC<{
-  errors: FormikErrors<InitialState>;
-  isSubmitting: boolean;
-}> = ({ errors, isSubmitting }) => {
+const LoginForm: LoginFormProps = ({ errors, isSubmitting }) => {
   const loginRef = useRef<HTMLFormElement>(null);
   const isSubmit = useRef(false);
 
@@ -102,7 +100,6 @@ const LoginForm: FC<{
       <Input
         type="email"
         name="email"
-        as="field"
         placeholder="Enter Email"
         errors={errors}
         required={true}
@@ -110,19 +107,29 @@ const LoginForm: FC<{
       <Input
         type="password"
         name="password"
-        as="field"
         placeholder="Enter Password"
         errors={errors}
         required={true}
       />
-      <Button disabled={isSubmitting} varient={PRIMARY}>
+      <Button disabled={isSubmitting} type="submit" varient={PRIMARY}>
         Log In
       </Button>
-      <div className="text-center">
-        <Link to="/forgotpassword" className="link text-sm">
-          Forgotten Password ?
-        </Link>
-      </div>
+
+      <Anchor.BASE to="/forgotpassword" className="text-sm">
+        Forgotten Password ?
+      </Anchor.BASE>
     </Form>
   );
 };
+
+/* types  */
+
+type InitialState = {
+  email: string;
+  password: string;
+};
+
+type LoginFormProps = FC<{
+  errors: FormikErrors<InitialState>;
+  isSubmitting: boolean;
+}>;

@@ -1,13 +1,12 @@
 import { FC, DetailedHTMLProps, ButtonHTMLAttributes } from "react";
+import { BTN } from "../constant/button";
 
-const BTN = `px-4 py-2 rounded-sm border border-transparent 
-w-full block capitalize dark:hover:border-transparent
-disabled:cursor-not-allowed disabled:opacity-50 
-transition duration-200 ease-linear  text-white 
-hover:bg-white dark:hover:bg-white disabled:text-white focus:bg-white
-focus:outline-none`;
-
-const Button: ButtonProps = ({ children, className, varient, ...rest }) => {
+const Button: ButtonProps = ({
+  className = "",
+  children,
+  varient,
+  ...rest
+}) => {
   return (
     <button
       className={`${BTN} hover:border-${varient}  

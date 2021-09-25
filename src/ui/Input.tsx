@@ -1,67 +1,79 @@
-import { FC } from "react";
+import {
+  DetailedHTMLProps,
+  Dispatch,
+  FC,
+  InputHTMLAttributes,
+  SetStateAction,
+  useEffect,
+  useState,
+} from "react";
 import { ErrorMessage, Field } from "formik";
 import ExclamationCircleIcon from "@heroicons/react/solid/ExclamationCircleIcon";
 
-const Input: Props = ({
-  name,
+const Input: InputProps = ({
+  name = "",
   type = "text",
-  placeholder = "",
-  as,
   errors = {},
-  required = false,
-  autoFocus = false,
+  ...rest
 }) => {
   const isInvalid = name in errors;
 
-  const FIELDS = {
-    name,
-    type,
-    placeholder,
-    required,
-    autoFocus,
-    "aria-invalid": isInvalid,
-  };
+  const [isError, setError] = useState(false);
 
-  if (as) {
-    return (
-      <div className="relative">
-        <Field
-          {...FIELDS}
-          className={`py-2 px-4 block w-full dark:text-black rounded-md
-          border border-gray-400 dark:border-transparent 
-          dark:bg-white 
+  return (
+    <div className="relative">
+      <Field
+        type={type}
+        name={name}
+        className={`py-2 px-4 block w-full dark:text-black rounded-md 
+          border border-gray-400 dark:border-transparent dark:bg-white 
           focus:outline-none focus:ring-2 focus:ring-blue-200 dark:focus:ring-blue-400 
-          focus:border-blue-400 ${isInvalid ? " border-red-500 " : ""}`}
-        />
-        <ExclamationCircleIcon
-          className={`${
-            isInvalid ? "inline" : "hidden"
-          } absolute right-3 top-3 h-5 w-5 text-red-500`}
-        />
-
-        <ErrorMessage
-          name={name}
-          render={(message) => (
-            <span className="sr-only" role="alert" aria-label={name}>
-              <span aria-hidden="true">*</span>
-              {message}
-            </span>
-          )}
-        />
-      </div>
-    );
-  }
-  return <input {...FIELDS} />;
+          focus:border-blue-400 ${isError ? " border-red-500 " : ""}`}
+        aria-invalid={isInvalid}
+        {...rest}
+      />
+      <ErrorMessage
+        name={name}
+        render={(message) => (
+          <ErrorComponent setError={setError} name={name} message={message} />
+        )}
+      />
+    </div>
+  );
 };
 
 export default Input;
 
-type Props = FC<{
+const ErrorComponent: ErrorComponentType = ({ setError, name, message }) => {
+  useEffect(() => {
+    setError(true);
+    return () => setError(false);
+  }, [setError]);
+
+  return (
+    <>
+      <ExclamationCircleIcon
+        className={`absolute right-3 top-3 h-5 w-5 text-red-500`}
+      />
+      <span
+        role="alert"
+        className="text-red-500 text-xs pl-4"
+        aria-label={name}
+      >
+        * {message}
+      </span>
+    </>
+  );
+};
+
+type InputProps = FC<
+  DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> & {
+    errors?: Record<string, string>;
+  }
+>;
+
+type ErrorComponentType = FC<{
   name: string;
-  type?: "text" | "email" | "password";
-  placeholder?: string;
-  errors?: Record<string, string>;
-  as?: "field";
-  required?: boolean;
-  autoFocus?: boolean;
+  message: string;
+  setError: Dispatch<SetStateAction<boolean>>;
 }>;

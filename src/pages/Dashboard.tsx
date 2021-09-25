@@ -10,10 +10,10 @@ export default function Dashboard() {
   const { selectedFolder, currentPath } = useFolder();
 
   return (
-    <div className="w-11/12 mx-auto mt-10 rounded-lg overflow-hidden shadow-lg bg-white dark:bg-gray-700 border">
-      <div className="bg-gray-50  dark:bg-gray-800 dark:text-gray-300 inline-flex w-full justify-between items-center px-2 sm:px-6 py-3">
+    <div className="mt-10 rounded-lg overflow-hidden shadow-md bg-white dark:bg-gray-700 border">
+      <div className="bg-gray-50 dark:bg-gray-800 dark:text-gray-300 flex flex-row w-full items-center px-2 sm:px-6 py-3">
         <BreadCrumbs currentFolder={selectedFolder ?? ""} />
-        <div className="inline-flex">
+        <div className="inline-flex w-max">
           <AddFile currentPath={currentPath} />
           <AddFolder
             currentFolderId={selectedFolder}
@@ -21,9 +21,7 @@ export default function Dashboard() {
           />
         </div>
       </div>
-
       <Folder />
-
       <File currentPath={currentPath} />
     </div>
   );

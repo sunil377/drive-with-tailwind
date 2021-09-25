@@ -1,6 +1,4 @@
 import { lazy, Suspense } from "react";
-import { Switch } from "react-router";
-
 import { AuthProvider } from "./Contexts/useAuthContext";
 
 import Navbar from "./Components/Navbar";
@@ -14,8 +12,9 @@ import Profile from "./pages/Profile";
 import ForgotPassword from "./pages/ForgotPassword";
 import Login from "./pages/Login";
 import { useTitle } from "./hooks/useTitle";
-import { Route } from "react-router-dom";
+import { Route, Switch } from "react-router-dom";
 import Test from "./Components/Test";
+import { SwitchComponent } from "./ui/Switch";
 
 const Dashboard = lazy(() => import("./pages/Dashboard"));
 
@@ -24,7 +23,7 @@ export default function App() {
   return (
     <AuthProvider>
       <ErrorBoundary>
-        <div className={"px-4 md:px-0 md:w-10/12 mx-auto"}>
+        <div className={"px-4 md:px-0 sm:w-10/12 mx-auto"}>
           <Navbar />
           <Suspense fallback={<div>loading...</div>}>
             <main>
@@ -44,6 +43,7 @@ export default function App() {
               </Switch>
             </main>
           </Suspense>
+          <SwitchComponent />
         </div>
       </ErrorBoundary>
     </AuthProvider>
