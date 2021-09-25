@@ -20,48 +20,32 @@ import Test from "./Components/Test";
 const Dashboard = lazy(() => import("./pages/Dashboard"));
 
 export default function App() {
-	useTitle();
-	return (
-		<AuthProvider>
-			<ErrorBoundary>
-				<Navbar />
-				<Suspense fallback={<div>loading...</div>}>
-					<main>
-						<Switch>
-							<PublicRoute
-								path="/login"
-								component={Login}
-							/>
-							<PublicRoute
-								path="/signup"
-								component={Signup}
-							/>
-							<PrivateRoute
-								path="/profile"
-								exact
-								component={Profile}
-							/>
-							<PublicRoute
-								path="/forgotpassword"
-								component={ForgotPassword}
-							/>
-							<PrivateRoute
-								path="/folders/:id"
-								exact
-								component={Dashboard}
-							/>
+  useTitle();
+  return (
+    <AuthProvider>
+      <ErrorBoundary>
+        <div className={"px-4 md:px-0 md:w-10/12 mx-auto"}>
+          <Navbar />
+          <Suspense fallback={<div>loading...</div>}>
+            <main>
+              <Switch>
+                <PublicRoute path="/login" component={Login} />
+                <PublicRoute path="/signup" component={Signup} />
+                <PrivateRoute path="/profile" exact component={Profile} />
+                <PublicRoute
+                  path="/forgotpassword"
+                  component={ForgotPassword}
+                />
+                <PrivateRoute path="/folders/:id" exact component={Dashboard} />
 
-							<Route path="/test" component={Test} />
+                <Route path="/test" component={Test} />
 
-							<PrivateRoute
-								path="/"
-								exact
-								component={Dashboard}
-							/>
-						</Switch>
-					</main>
-				</Suspense>
-			</ErrorBoundary>
-		</AuthProvider>
-	);
+                <PrivateRoute path="/" exact component={Dashboard} />
+              </Switch>
+            </main>
+          </Suspense>
+        </div>
+      </ErrorBoundary>
+    </AuthProvider>
+  );
 }

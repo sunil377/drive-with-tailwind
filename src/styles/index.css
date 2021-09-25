@@ -2,6 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
-.upload:focus + label {
-	outline: auto;
+@layer components {
+  .card {
+    @apply w-full space-y-4 max-w-md px-4 sm:px-6 py-8
+    bg-white dark:bg-gray-800 dark:text-gray-300 
+    mx-auto rounded-lg border shadow-md;
+  }
+
+  .link {
+    @apply hover:underline focus:underline text-indigo-500 inline-block outline-none;
+  }
+
+  .upload:focus + label {
+    @apply outline-black;
+  }
 }
